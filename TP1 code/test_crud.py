@@ -133,7 +133,16 @@ class TestCRUD(unittest.TestCase):
         est retourne par la fonction si ID non-existant est utilisé
         il faut utiliser ".assertEqual()" ou ".assertFalse()"
         """
-        pass
+        crud = CRUD()
+        mock_read_users_file.return_value = {
+            "0": {
+                "user_email": "test@gmail.com",
+                "date": datetime.datetime.now()
+            }
+        }
+        self.assertFalse(crud.get_user_data("1")) #l'utilisateur avec l'id 1 ne devrait pas exister
+
+        
         
 
     @patch("crud.CRUD.read_users_file")
