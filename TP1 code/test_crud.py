@@ -197,7 +197,7 @@ class TestCRUD(unittest.TestCase):
 
         crud = CRUD()
 
-        #l'utilisateur 0 et le champ "name" existent,ce qui devrait donc retourner la bonne valeur
+        #l'utilisateur 0 et le champ "name" existent, donc la bonne valeur est retournée
         self.assertEqual(crud.get_user_data("0","name"),email)
 
     @patch("crud.CRUD.read_groups_file")
@@ -205,7 +205,13 @@ class TestCRUD(unittest.TestCase):
         """
         Similaire au test_get_user_data_Returns_false_for_invalid_id mais pour un groupe
         """
-        pass
+        
+        id = "1"
+        mock_read_groups_file.return_value = {}
+        crud = CRUD()
+
+        #le groupe d'id 1 n'existe pas, donc getGroupData retourne faux
+        self.assertFalse(crud.get_groups_data(id,"name"))
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_data_Returns_false_for_invalid_field(
