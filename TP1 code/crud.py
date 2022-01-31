@@ -116,7 +116,7 @@ class CRUD:
         la description du lab
         Sortie: bool, 'True' pour success, 'False' dans le cas de failure.
         '''
-
+   
         # Check the unicity of the group name
         if name in self.groups_lookup:
             return False

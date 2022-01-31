@@ -98,35 +98,38 @@ class TestCRUD(unittest.TestCase):
         self.modify_groups_file(data) -> "data" doit avoir un format et contenu attendu
         il faut utiliser ".assert_called_once_with(expected_data)"
         """
-        crud = CRUD()
 
         mock_read_groups_file.return_value = {
             "0": {
-                "name": "blank",
-                "Trust": 75,
+                "name": "default",
+                "Trust": 50,
                 "List_of_members": []
             }
         }
 
-        name = "secondGroup"
+        crud = CRUD()
+        name = "group"
         trust = 80
-        members = ["firstMember","secondMember"]
+        members = []
 
-        group = {
+        crud.add_new_group(name,trust,members)
+  
+
+        groups = {
             "0": {
-                "name": "blank",
-                "Trust": 75,
+                "name": "default",
+                "Trust": 50,
                 "List_of_members": []
             },
             "1": {
                 "name": name,
-                "trust": trust,
-                "members": members
+                "Trust": trust,
+                "List_of_members": members
             }
         }
-        crud.add_new_group(name,trust,members)
-        mock_modify_groups_file.assert_called_once_with(group)
+        mock_modify_groups_file.assert_called_once_with(groups)
 
+        
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_false_for_invalid_id(self, mock_read_users_file):
         """Description: il faut utiliser le mock de fonction "read_users_file",
@@ -141,7 +144,8 @@ class TestCRUD(unittest.TestCase):
                 "date": datetime.datetime.now()
             }
         }
-        self.assertFalse(crud.get_user_data(1,"name")) #l'utilisateur avec l'id 1 n'existe pas, ce qui devrait retourner faux'
+        self.assertFalse(crud.get_user_data(1,"name")) 
+        #l'utilisateur avec l'id 1 n'existe pas, ce qui devrait donc retourner faux'
 
         
         
@@ -160,7 +164,9 @@ class TestCRUD(unittest.TestCase):
                 "date": datetime.datetime.now()
             }
         }
-        self.assertFalse(crud.get_user_data(0,))
+        self.assertFalse(crud.get_user_data(0,"champInexistant")) 
+        #l'utilisateur avec l'id 0 existe, mais le champ "champInexistant" n'existe pas, ce qui devrait donc retourner faux
+        pass
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_correct_value_if_field_and_id_are_valid(
