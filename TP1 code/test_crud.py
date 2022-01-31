@@ -144,8 +144,10 @@ class TestCRUD(unittest.TestCase):
                 "date": datetime.datetime.now()
             }
         }
-        self.assertFalse(crud.get_user_data(1,"name")) 
+        
         #l'utilisateur avec l'id 1 n'existe pas, ce qui devrait donc retourner faux'
+        self.assertFalse(crud.get_user_data(1,"name")) 
+        
 
         
         
@@ -164,9 +166,11 @@ class TestCRUD(unittest.TestCase):
                 "date": datetime.datetime.now()
             }
         }
-        self.assertFalse(crud.get_user_data(0,"champInexistant")) 
+
         #l'utilisateur avec l'id 0 existe, mais le champ "champInexistant" n'existe pas, ce qui devrait donc retourner faux
-        pass
+        self.assertFalse(crud.get_user_data(0,"champInexistant")) 
+        
+        
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_correct_value_if_field_and_id_are_valid(
@@ -177,7 +181,24 @@ class TestCRUD(unittest.TestCase):
         si champ et id valide sont utilises
         il faut utiliser ".assertEqual()""
         """
-        pass
+        
+        email = "test@gmail.com"
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": email,
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": datetime.datetime.now(),
+                "Date_of_last_seen_message": datetime.datetime.now(),
+                "Groups": ["default"]
+            }
+        }
+
+        crud = CRUD()
+
+        #l'utilisateur 0 et le champ "name" existent,ce qui devrait donc retourner la bonne valeur
+        self.assertEqual(crud.get_user_data("0","name"),email)
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_data_Returns_false_for_invalid_id(self, mock_read_groups_file):
