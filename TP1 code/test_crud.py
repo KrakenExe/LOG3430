@@ -1,4 +1,5 @@
 from os import name
+from tokenize import group
 from crud import CRUD
 import unittest
 from unittest.mock import patch
@@ -286,12 +287,24 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
 
         #le groupe "imaginaryGroup" n'exsite pas, donc get_group_id retourne faux
-        self.assertFalse(crud.get_group_id("group_name"))
+        self.assertFalse(crud.get_group_id(group_name))
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_id_Returns_id_for_valid_group_name(self, mock_read_groups_file):
         
-        pass
+        group_name = "validGroup"
+        id = "0"
+        mock_read_groups_file.return_value = {
+            "0": {
+                "name": group_name,
+                "Trust": 75,
+                "List_of_members": []
+            }
+        }
+        crud = CRUD()
+
+        #le groupe "validGroup" existe, donc get_group_id retourne son id (0)
+        self.assertEqual(crud.get_group_id(group_name),id)
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
