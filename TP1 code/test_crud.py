@@ -145,7 +145,7 @@ class TestCRUD(unittest.TestCase):
             }
         }
         
-        #l'utilisateur avec l'id 1 n'existe pas, ce qui devrait donc retourner faux'
+        #l'utilisateur avec l'id 1 n'existe pas, donc get_user_data retourne faux'
         self.assertFalse(crud.get_user_data(1,"name")) 
         
 
@@ -167,7 +167,7 @@ class TestCRUD(unittest.TestCase):
             }
         }
 
-        #l'utilisateur avec l'id 0 existe, mais le champ "imaginaryField" n'existe pas, ce qui devrait donc retourner faux
+        #l'utilisateur avec l'id 0 existe, mais le champ "imaginaryField" n'existe pas, donc get_user_data retourne faux
         self.assertFalse(crud.get_user_data(0,"imaginaryField")) 
         
         
@@ -197,7 +197,7 @@ class TestCRUD(unittest.TestCase):
 
         crud = CRUD()
 
-        #l'utilisateur 0 et le champ "name" existent, donc la bonne valeur est retournée
+        #l'utilisateur 0 et le champ "name" existent, donc get_user_data retourne bien "test@gmail.com"
         self.assertEqual(crud.get_user_data("0","name"),email)
 
     @patch("crud.CRUD.read_groups_file")
@@ -210,7 +210,7 @@ class TestCRUD(unittest.TestCase):
         mock_read_groups_file.return_value = {}
         crud = CRUD()
 
-        #le groupe d'id 1 n'existe pas, donc getGroupData retourne faux
+        #le groupe d'id 1 n'existe pas, donc get_group_data retourne faux
         self.assertFalse(crud.get_groups_data(id,"name"))
 
     @patch("crud.CRUD.read_groups_file")
@@ -225,7 +225,7 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         
         #le groupe d'id 0 (le groupe par défaut) existe, mais le champ "imaginaryField" n'existe pas, 
-        # donc getGroupData retourne faux
+        # donc get_group_data retourne faux
         self.assertFalse(crud.get_groups_data(0,field))
 
     @patch("crud.CRUD.read_groups_file")
@@ -246,14 +246,20 @@ class TestCRUD(unittest.TestCase):
         }
         crud = CRUD()
 
-        # le groupe d'id 1 et le champ "name" existent, donc getGroupeData retourne "newGroup"
+        # le groupe d'id 1 et le champ "name" existent, donc get_group_data retourne "newGroup"
         self.assertEqual(crud.get_groups_data(1,field),name)
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_false_for_invalid_user_name(
         self, mock_read_users_file
     ):
-        pass
+       user_email = "test@gmail.com" 
+       mock_read_users_file.return_value = {}
+       crud = CRUD()
+
+       #l'utilisateur avec le courriel "test@gmail.com" n'existe pas, donc get_user_id retourne faux 
+       self.assertFalse(crud.get_user_id(user_email))
+        
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_id_for_valid_user_name(self, mock_read_users_file):
