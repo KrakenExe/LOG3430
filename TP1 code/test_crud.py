@@ -97,7 +97,34 @@ class TestCRUD(unittest.TestCase):
         self.modify_groups_file(data) -> "data" doit avoir un format et contenu attendu
         il faut utiliser ".assert_called_once_with(expected_data)"
         """
-        pass
+        crud = CRUD()
+
+        mock_read_groups_file.return_value = {
+            "0": {
+                "name": "blank",
+                "Trust": 75,
+                "List_of_members": []
+            }
+        }
+
+        name = "secondGroup"
+        trust = 80
+        members = ["firstMember","secondMember"]
+
+        group = {
+            "0": {
+                "name": "blank",
+                "Trust": 75,
+                "List_of_members": []
+            },
+            "1": {
+                "name": name,
+                "trust": trust,
+                "members": members
+            }
+        }
+        crud.add_new_group(name,trust,members)
+        mock_modify_groups_file.assert_called_once_with(group)
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_false_for_invalid_id(self, mock_read_users_file):
