@@ -167,8 +167,8 @@ class TestCRUD(unittest.TestCase):
             }
         }
 
-        #l'utilisateur avec l'id 0 existe, mais le champ "champInexistant" n'existe pas, ce qui devrait donc retourner faux
-        self.assertFalse(crud.get_user_data(0,"champInexistant")) 
+        #l'utilisateur avec l'id 0 existe, mais le champ "imaginaryField" n'existe pas, ce qui devrait donc retourner faux
+        self.assertFalse(crud.get_user_data(0,"imaginaryField")) 
         
         
 
@@ -220,7 +220,13 @@ class TestCRUD(unittest.TestCase):
         """
         Similaire au test_get_user_data_Returns_false_for_invalid_field mais pour un groupe
         """
-        pass
+        field = "imaginaryField"
+        mock_read_groups_file.return_value = {}
+        crud = CRUD()
+        
+        #le groupe d'id 0 (le groupe par défaut) existe, mais le champ "imaginaryField" n'existe pas, 
+        # donc getGroupData retourne faux
+        self.assertFalse(crud.get_groups_data(0,field))
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_data_Returns_correct_value_if_field_and_id_are_valid(
