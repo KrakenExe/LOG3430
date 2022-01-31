@@ -1,3 +1,4 @@
+from os import name
 from crud import CRUD
 import unittest
 from unittest.mock import patch
@@ -140,7 +141,7 @@ class TestCRUD(unittest.TestCase):
                 "date": datetime.datetime.now()
             }
         }
-        self.assertFalse(crud.get_user_data("1")) #l'utilisateur avec l'id 1 ne devrait pas exister
+        self.assertFalse(crud.get_user_data(1,"name")) #l'utilisateur avec l'id 1 n'existe pas, ce qui devrait retourner faux'
 
         
         
@@ -152,7 +153,14 @@ class TestCRUD(unittest.TestCase):
         est retourne par la fonction si champ non-existant est utilisé
         il faut utiliser ".assertEqual()" ou ".assertFalse()"
         """
-        pass
+        crud = CRUD()
+        mock_read_users_file.return_value = {
+            "0": {
+                "user_email": "test@gmail.com",
+                "date": datetime.datetime.now()
+            }
+        }
+        self.assertFalse(crud.get_user_data(0,))
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_data_Returns_correct_value_if_field_and_id_are_valid(
