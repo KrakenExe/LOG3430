@@ -235,7 +235,19 @@ class TestCRUD(unittest.TestCase):
         """
         Similaire au test_get_user_data_Returns_correct_value_if_field_and_id_are_valid mais pour un groupe
         """
-        pass
+        field = "name"
+        name = "newGroup"
+        mock_read_groups_file.return_value = {
+            "1" : {
+                "name": name,
+                "Trust": 75,
+                "List_of_members": []
+            }
+        }
+        crud = CRUD()
+
+        # le groupe d'id 1 et le champ "name" existent, donc getGroupeData retourne "newGroup"
+        self.assertEqual(crud.get_groups_data(1,field),name)
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_false_for_invalid_user_name(
