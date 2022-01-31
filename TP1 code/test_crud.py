@@ -263,7 +263,19 @@ class TestCRUD(unittest.TestCase):
 
     @patch("crud.CRUD.read_users_file")
     def test_get_user_id_Returns_id_for_valid_user_name(self, mock_read_users_file):
-        pass
+        user_email = "test@gmail.com"
+        id = "0"
+        mock_read_users_file.return_value = {
+            "0" : {
+                "name": user_email,
+                "Trust": 50,
+                "List_of_members": []   
+            }
+        } 
+        crud = CRUD()
+
+        #l'utilisateur avec le courriel "test@gmail.com" existe, donc get_user_id revoie son id (0)
+        self.assertEqual(crud.get_user_id(user_email),id)
 
     @patch("crud.CRUD.read_groups_file")
     def test_get_group_id_Returns_false_for_invalid_group_name(
