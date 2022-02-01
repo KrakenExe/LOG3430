@@ -368,9 +368,13 @@ class TestCRUD(unittest.TestCase):
         """
         mock_read_users_file.return_value = {
             "0":{
-                "name":"default",
-                "Trust":60,
-                "List_of_members":[]
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["default"]
             }
         }
 
@@ -382,9 +386,13 @@ class TestCRUD(unittest.TestCase):
 
         users = {
             "0":{
-                "name":"default",
-                "Trust":data,
-                "List_of_members":[]
+                "name": "name",
+                "Trust": data,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["default"]
             }
         }
 
@@ -400,7 +408,15 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_groups_file' et 'modify_groups_file'
         (ou selon votre realisation)
         """
-        pass
+        mock_read_groups_file.return_value = {}
+        crud = CRUD()
+        id = "1"
+        field = "Trust"
+        data = 75
+
+        #le groupe d'id 1 n'existe pas, donc update_groups doit retourner faux
+        self.assertFalse(crud.update_groups(id,field,data)) 
+
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
@@ -410,7 +426,6 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_groups_file' et 'modify_groups_file'
         (ou selon votre realisation)
         """
-        pass
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
