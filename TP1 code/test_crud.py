@@ -366,7 +366,31 @@ class TestCRUD(unittest.TestCase):
         (ou selon votre realisation)
         Il faut utiliser ".assert_called_once_with(expected_data)"
         """
-        pass
+        mock_read_users_file.return_value = {
+            "0":{
+                "name":"default",
+                "Trust":60,
+                "List_of_members":[]
+            }
+        }
+
+        crud = CRUD()
+        id = "0"
+        field = "Trust"
+        data = 80
+        crud.update_users(id,field,data)
+
+        users = {
+            "0":{
+                "name":"default",
+                "Trust":data,
+                "List_of_members":[]
+            }
+        }
+
+        #la fonction modify_user_file doit être appellé avec les bonnes valeurs
+        mock_modify_users_file.assert_called_once_with(users)
+        
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
