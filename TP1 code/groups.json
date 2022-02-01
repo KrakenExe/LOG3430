@@ -1,1 +1,28 @@
-{}
+{
+  "1": {
+    "name": "default",
+    "Trust": 50,
+    "List_of_members": [
+      "micheal@mail.com",
+      "john@gmail.com",
+      "scott@mail.com",
+      "eddy@mail.com",
+      "brad@mail.com"
+    ]
+  },
+  "2": {
+    "name": "montreal",
+    "Trust": 90,
+    "List_of_members": ["scott@mail.com", "micheal@mail.com", "eddy@mail.com"]
+  },
+  "3": {
+    "name": "poly",
+    "Trust": 70,
+    "List_of_members": ["brad@mail.com", "john@gmail.com", "micheal@mail.com"]
+  },
+  "4": {
+    "name": "cdn",
+    "Trust": 30,
+    "List_of_members": ["eddy@mail.com", "john@gmail.com"]
+  }
+}

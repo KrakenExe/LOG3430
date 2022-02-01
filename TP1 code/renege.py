@@ -177,3 +177,33 @@ class RENEGE:
     ###########################################
     #             CUSTOM FUNCTION             #
     ###########################################
+
+    def get_user_trust(self, email):
+        '''
+        Fetching data
+        '''
+        user_id = self.crud.get_user_id(email)
+        user_SpamN = self.crud.get_user_data(user_id, 'SpamN')
+        user_HamN = self.crud.get_user_data(user_id, 'HamN')
+        user_SpamN = self.crud.get_user_data(user_id, 'SpamN')
+        user_dolsm = self.crud.get_user_data(user_id, 'Date_of_last_seen_message')
+        user_dofsm = self.crud.get_user_data(user_id, 'Date_of_first_seen_message')
+        user_groups = self.crud.get_user_data(user_id, 'Groups')
+        '''
+        Processing data
+        '''
+        averages_sum = 0
+        for group in user_groups:
+            group_id = self.crud.get_group_id(group.name)
+            group_average = self.crud.get_groups_data(group_id, "Trust")
+            averages_sum += group_average
+        trust2 = averages_sum / len(user_groups)
+        if (trust2 < 60):
+            return trust2
+        trust1 = (user_dolsm * user_HamN) / (user_dofsm * (user_HamN + user_SpamN))
+        if (trust1 > 100):
+            return trust1
+        trust = (0.6 * trust1 + 0.4 * trust2) / 2
+        if (trust <= 100 and trust >= 0):
+            return trust
+        return False
