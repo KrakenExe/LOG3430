@@ -193,8 +193,8 @@ class RENEGE:
         Processing data
         '''
         averages_sum = 0
-        for group in user_groups:
-            group_id = self.crud.get_group_id(group.name)
+        for group_name in user_groups:
+            group_id = self.crud.get_group_id(group_name)
             group_average = self.crud.get_groups_data(group_id, "Trust")
             averages_sum += group_average
         trust2 = averages_sum / len(user_groups)
