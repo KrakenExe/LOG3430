@@ -326,7 +326,7 @@ class TestCRUD(unittest.TestCase):
         }
         crud = CRUD()
 
-        #le champ "Trust" existe, mais l'utilisateur d'id 1 n'existe pas, donc update_users renvoie faux
+        #le champ "Trust" existe, mais l'utilisateur d'id 1 n'existe pas, donc update_users doit renvoyer faux
         self.assertFalse(crud.update_users(id,"Trust",75))
 
         #étant donné que l'utilisateur d'id 1 n'existe pas, modify_users ne doit pas avoir été appellé
@@ -340,7 +340,22 @@ class TestCRUD(unittest.TestCase):
         """Il faut utiliser les mocks pour 'read_users_file' et 'modify_users_file'
         (ou selon votre realisation)
         """
-        pass
+        
+        field = "imaginaryField"
+        mock_read_users_file.return_value = {
+            "0":{
+                "name":"name",
+                "Trust":50,
+                "List_of_members":[]
+            }
+        }
+        crud = CRUD()
+
+        #l'utilisateur d'id 0 existe, mais pas le champ "imaginary field", donc update_users doit renvoyer faux
+        self.assertFalse(crud.update_users("0",field,75))
+
+        #étant donné que le champ "imaginaryField" n'existe pas, modify_users ne doit pas avoir été appellé
+        mock_modify_users_file.assert_not_called()
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
