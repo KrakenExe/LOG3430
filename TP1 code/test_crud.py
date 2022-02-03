@@ -1,3 +1,4 @@
+from email.policy import default
 from os import name
 from tokenize import group
 from crud import CRUD
@@ -503,19 +504,41 @@ class TestCRUD(unittest.TestCase):
     def test_remove_user_group_Returns_false_for_invalid_id(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        mock_read_users_file = {}
-        id = "1"
+        mock_read_users_file = {
+            "0":{
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["group1"]
+            }
+        }
         crud = CRUD()
-
-        #le groupe d'id n'existe pas, donc remove_group doit retourner faux
-        self.assertFalse(crud.remove_group(id))
+        #le groupe "groupe1" existe mais pas l'utilisateur d'id 0, donc remove_user_group doit retourner faux
+        self.assertFalse(crud.remove_user_group("1","group1"))
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
     def test_remove_user_group_Returns_false_for_invalid_group(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        pass
+        mock_read_users_file = {
+            "0":{
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["group1"]
+            }
+        }
+        crud = CRUD()
+        #l'utilisateur d'id 0 existe mais pas le groupe "groupe2", donc remove_user_group doit retourner faux
+        self.assertFalse(crud.remove_user_group("0","groupe2"))
+
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")
