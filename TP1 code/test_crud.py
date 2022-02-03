@@ -478,7 +478,23 @@ class TestCRUD(unittest.TestCase):
     def test_remove_user_Passes_correct_value_to_modify_users_file(
         self, mock_read_users_file, mock_modify_users_file
     ):
-      pass
+        user_data = {
+          "0":{
+              "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["default"]
+            }
+        }
+        
+        mock_read_users_file.return_value = user_data
+        id="0"
+        crud = CRUD()
+        crud.remove_user(id)
+        mock_modify_users_file.assert_called_once_with(user_data)
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
