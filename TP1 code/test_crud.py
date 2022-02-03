@@ -504,7 +504,7 @@ class TestCRUD(unittest.TestCase):
     def test_remove_user_group_Returns_false_for_invalid_id(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        mock_read_users_file = {
+        mock_read_users_file.return_value = {
             "0":{
                 "name": "name",
                 "Trust": 50,
@@ -516,7 +516,7 @@ class TestCRUD(unittest.TestCase):
             }
         }
         crud = CRUD()
-        #le groupe "groupe1" existe mais pas l'utilisateur d'id 0, donc remove_user_group doit retourner faux
+        #le groupe "group1" existe mais pas l'utilisateur d'id 1, donc remove_user_group doit retourner faux
         self.assertFalse(crud.remove_user_group("1","group1"))
 
     @patch("crud.CRUD.modify_users_file")
@@ -524,7 +524,7 @@ class TestCRUD(unittest.TestCase):
     def test_remove_user_group_Returns_false_for_invalid_group(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        mock_read_users_file = {
+        mock_read_users_file.return_value = {
             "0":{
                 "name": "name",
                 "Trust": 50,
@@ -537,7 +537,7 @@ class TestCRUD(unittest.TestCase):
         }
         crud = CRUD()
         #l'utilisateur d'id 0 existe mais pas le groupe "groupe2", donc remove_user_group doit retourner faux
-        self.assertFalse(crud.remove_user_group("0","groupe2"))
+        self.assertFalse(crud.remove_user_group("0","group2"))
 
 
     @patch("crud.CRUD.modify_users_file")
