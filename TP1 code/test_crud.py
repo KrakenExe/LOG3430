@@ -416,7 +416,6 @@ class TestCRUD(unittest.TestCase):
         """
         mock_read_groups_file.return_value = {}
         crud = CRUD()
-       
         #le groupe d'id 0 existe (groupe par défaut) mais le champ "imaginaryField" n'existe pas, donc update_groups doit retourner faux
         self.assertFalse(crud.update_groups("0","imaginaryField",75))
 
@@ -458,14 +457,28 @@ class TestCRUD(unittest.TestCase):
     def test_remove_user_Returns_false_for_invalid_id(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        pass
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["default"]
+            }
+        }
+        id="1"
+        crud = CRUD()
+        self.assertFalse(crud.remove_user(id))
+    
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
     def test_remove_user_Passes_correct_value_to_modify_users_file(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        pass
+      pass
 
     @patch("crud.CRUD.modify_users_file")
     @patch("crud.CRUD.read_users_file")    
