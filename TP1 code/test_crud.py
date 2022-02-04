@@ -574,7 +574,7 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         crud.remove_user_group("0","group1")
         #on retire "group1", qui est le seul groupe de l'utilisateur 0, 
-        # donc modify_user_file doit être appellé avec une liste de groupes vide
+        # donc modify_users_file doit être appellé avec une liste de groupes vide
         mock_modify_users_file.assert_called_once_with(user_data_after_remove)
 
 
@@ -583,7 +583,10 @@ class TestCRUD(unittest.TestCase):
     def test_remove_group_Returns_false_for_invalid_id(
         self, mock_read_groups_file, mock_modify_groups_file
     ):
-        pass
+        mock_read_groups_file.return_value = {}
+        crud = CRUD()
+        #le group d'id 1 n'existe pas, donc remove_group doit retourner faux
+        self.assertFalse(crud.remove_group("1"))
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
