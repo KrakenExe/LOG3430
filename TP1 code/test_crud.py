@@ -916,3 +916,21 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         #la valeur passée est inférieur à la valeur minimum permise pour Trust, donc update_users doit retourner faux
         self.assertFalse(crud.update_users("0","Trust",-1))
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_users_Returns_false_if_new_trust_is_higher_than_one_hundred(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message": 1596844800.0,
+                "Groups": []
+            }
+        }
+        crud = CRUD()
+        #la valeur passée est supérieure à la valeur maximum permise pour Trust, donc update_users doit retourner faux
+        self.assertFalse(crud.update_users("0","Trust",101))
