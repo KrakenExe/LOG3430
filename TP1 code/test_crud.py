@@ -726,5 +726,73 @@ class TestCRUD(unittest.TestCase):
         #l'utilisateur "test@gmail.com" existe deja, donc add_new_user doit renvoyer faux
         self.assertFalse(crud.add_new_user("test@gmail.com", "2020-08-08"))
     
-
     
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    @patch("crud.CRUD.modify_groups_file")
+    def test_add_new_group(self,mock_modify_groups_file, mock_read_groups_file, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+
+        crud = CRUD()
+        #l'utilisateur "fakeUser@gmail.com" n'existe pas, donc add_new_group doit retourner faux
+        self.assertFalse(crud.add_new_group("group1", 50, ["fakeUser@gmail.com"]))
+    
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_users_Returns_false_for_invalid_email_format(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+        crud = CRUD()
+        #on remplace le courriel de l'utilisateur par une expression invalide, donc update_users doit retourner faux
+        self.assertFalse(crud.update_users("0","name","invalidEmail"))
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_users_Correctly_updates_username(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+        new_user_data = {
+            "0":{
+                "name": "new@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+        crud = CRUD()
+        crud.update_users("0","name","new@gmail.com")
+        mock_modify_users_file.assert_called_once_with(new_user_data)
+
+        
