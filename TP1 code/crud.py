@@ -116,7 +116,7 @@ class CRUD:
         la description du lab
         Sortie: bool, 'True' pour success, 'False' dans le cas de failure.
         '''
-
+   
         # Check the unicity of the group name
         if name in self.groups_lookup:
             return False
@@ -417,7 +417,7 @@ class CRUD:
 
         except RuntimeError:
             return False
-
+               
         return self.modify_users_file(self.users_data)
 
     def remove_user_group(self, user_id, group_name):
