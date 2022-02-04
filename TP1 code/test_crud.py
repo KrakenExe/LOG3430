@@ -701,4 +701,11 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         self.assertEqual(crud.get_new_user_id(),"1")
 
+    @patch("crud.CRUD.modify_users_file")
+    @patch("crud.CRUD.read_users_file")
+    def test_add_new_user_Returns_false_for_invalid_email_format(self, mock_read_users_file, mock_modify_users_file):
+        crud = CRUD()
+        #le format de "invalid_email" n'est pas valide, donc add_new_user doit retourner faux
+        self.assertFalse(crud.add_new_user("invalid_email",""))
 
+    
