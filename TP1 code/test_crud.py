@@ -545,7 +545,38 @@ class TestCRUD(unittest.TestCase):
     def test_remove_user_group_Passes_correct_value_to_modify_users_file(
         self, mock_read_users_file, mock_modify_users_file
     ):
-        pass
+        
+        user_data = {
+            "0":{
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": ["group1"]
+            }
+        }
+
+        user_data_after_remove = {
+            "0":{
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+
+        mock_read_users_file.return_value = user_data
+        crud = CRUD()
+        crud.remove_user_group("0","group1")
+        #on retire "group1", qui est le seul groupe de l'utilisateur 0, 
+        # donc modify_user_file doit être appellé avec une liste de groupes vide
+        mock_modify_users_file.assert_called_once_with(user_data_after_remove)
+
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
