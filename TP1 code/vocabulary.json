@@ -1,6 +1,10 @@
 {
     "p_sub_spam": {},
-    "p_sub_ham": {},
+    "p_sub_ham": {
+        "low": 1.0
+    },
     "p_body_spam": {},
-    "p_body_ham": {}
+    "p_body_ham": {
+        "high": 1.0
+    }
 }
