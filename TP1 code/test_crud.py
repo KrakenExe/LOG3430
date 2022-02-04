@@ -574,7 +574,7 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         crud.remove_user_group("0","group1")
         #on retire "group1", qui est le seul groupe de l'utilisateur 0, 
-        # donc modify_users_file doit être appellé avec une liste de groupes vide
+        # donc modify_users_file doit être appellé avec un utilisateur qui a une liste de groupes vide
         mock_modify_users_file.assert_called_once_with(user_data_after_remove)
 
 
@@ -593,7 +593,28 @@ class TestCRUD(unittest.TestCase):
     def test_remove_group_Passes_correct_value_to_modify_groups_file(
         self, mock_read_groups_file, mock_modify_groups_file
     ):
-        pass
+    
+        members = {
+            "0":{
+                "name":"default",
+                "Trust":50,
+                "List_of_members":[]
+            },
+            "1":{
+                "name":"group1",
+                "Trust":75,
+                "List_of_members":[]
+            }
+        }
+
+        mock_read_groups_file.return_value = members
+        
+        crud = CRUD()
+        crud.remove_group("1")
+        #on retire le groupe d'id 1, qui est le seul groupe, donc modify_groups_value 
+        #doit être appelé avec une liste de groupes vide
+        mock_modify_groups_file.assert_called_once_with(members)
+
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
