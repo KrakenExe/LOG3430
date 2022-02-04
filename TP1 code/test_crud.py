@@ -546,7 +546,7 @@ class TestCRUD(unittest.TestCase):
         self, mock_read_users_file, mock_modify_users_file
     ):
         
-        user_data = {
+        mock_read_users_file.return_value = {
             "0":{
                 "name": "name",
                 "Trust": 50,
@@ -570,7 +570,6 @@ class TestCRUD(unittest.TestCase):
             }
         }
 
-        mock_read_users_file.return_value = user_data
         crud = CRUD()
         crud.remove_user_group("0","group1")
         #on retire "group1", qui est le seul groupe de l'utilisateur 0, 
@@ -594,7 +593,7 @@ class TestCRUD(unittest.TestCase):
         self, mock_read_groups_file, mock_modify_groups_file
     ):
     
-        members = {
+        groups = {
             "0":{
                 "name":"default",
                 "Trust":50,
@@ -607,13 +606,12 @@ class TestCRUD(unittest.TestCase):
             }
         }
 
-        mock_read_groups_file.return_value = members
+        mock_read_groups_file.return_value = groups
         
         crud = CRUD()
         crud.remove_group("1")
-        #on retire le groupe d'id 1, qui est le seul groupe, donc modify_groups_value 
-        #doit être appelé avec une liste de groupes vide
-        mock_modify_groups_file.assert_called_once_with(members)
+        #le groupe d'id 1 existew, donc modify_group_files doit être appelé avec groups
+        mock_modify_groups_file.assert_called_once_with(groups)
 
 
     @patch("crud.CRUD.modify_groups_file")
@@ -621,22 +619,86 @@ class TestCRUD(unittest.TestCase):
     def test_remove_group_member_Returns_false_for_invalid_id(
         self, mock_read_groups_file, mock_modify_groups_file
     ):
-        pass
+        mock_read_groups_file.return_value = {}
+        crud = CRUD()
+        #le groupe d'id 1 n'existe pas, donc remove_group_member doit retourner faux
+        self.assertFalse(crud.remove_group_member("1","user1"))
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
     def test_remove_group_member_Returns_false_for_invalid_group_member(
         self, mock_read_groups_file, mock_modify_groups_file
     ):
-        pass
+        mock_read_groups_file.return_value = {
+            "0":{
+                "name":"group",
+                "Trust":75,
+                "List_of_members":["user1"]
+            }
+        }
+        
+        crud = CRUD()
+        #le groupe d'id 0 existe mais pas l'utilisateur "user2", donc remove_group_member doit renvoyer faux
+        self.assertFalse(crud.remove_group_member("0","user2"))
+    
 
     @patch("crud.CRUD.modify_groups_file")
     @patch("crud.CRUD.read_groups_file")    
     def test_remove_group_member_Passes_correct_value_to_modify_groups_file(
         self, mock_read_groups_file, mock_modify_groups_file
     ):
-        pass
+        mock_read_groups_file.return_value = {
+            "0":{
+                "name":"default",
+                "Trust":50,
+                "List_of_members":[]
+            },
+            "1":{
+                "name":"group",
+                "Trust":75,
+                "List_of_members":["user1"]
+            }
+        }
+
+        groups_after_remove = {
+             "0":{
+                "name":"default",
+                "Trust":50,
+                "List_of_members":[]
+            },
+            "1":{
+                "name":"group",
+                "Trust":75,
+                "List_of_members":[]
+            }
+        }
+
+        crud = CRUD()
+        crud.remove_group_member("1","user1")
+        #on retire l'utilisateur user1 (qui est le seul membre de son groupe) du groupe d'id 1, 
+        # donc modify_groups_file doit être appelé avec un groupe d'id 1 qui
+        #a une liste de membres vide
+        mock_modify_groups_file.assert_called_once_with(groups_after_remove)
     
     ###########################################
     #               CUSTOM TEST               #
     ###########################################
+
+    @patch("crud.CRUD.read_users_file")
+    def test_get_new_user_id_returns_correct_id(self, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "name",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+
+        crud = CRUD()
+        self.assertEqual(crud.get_new_user_id(),"1")
+
+
