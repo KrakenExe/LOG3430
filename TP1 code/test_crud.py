@@ -843,8 +843,24 @@ class TestCRUD(unittest.TestCase):
                 "Groups": []
             }
         }
-
+        #modify_users_file doit être appelé avec la nouvelle valeur de Date_of_last_seen_message 
         crud.update_users("0","Date_of_last_seen_message","2042-08-08")
         mock_modify_users_file.assert_called_once_with(new_user_data)
 
-        
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_users_Returns_false_if_Date_of_first_seen_message_is_newer_than_previous(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message": 1596844800.0,
+                "Groups": []
+            }
+        } 
+        crud = CRUD()
+        #la date passée est plus récente que la date du message le plus ancien, donc update_users doit retourner faux
+        self.assertFalse(crud.update_users("0","Date_of_first_seen_message","2042-08-08"))
