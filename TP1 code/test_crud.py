@@ -934,3 +934,53 @@ class TestCRUD(unittest.TestCase):
         crud = CRUD()
         #la valeur passée est supérieure à la valeur maximum permise pour Trust, donc update_users doit retourner faux
         self.assertFalse(crud.update_users("0","Trust",101))
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_users_Correctly_updates_trust(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message": 1596844800.0,
+                "Groups": []
+            }
+        }
+
+        new_user_data = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 75,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message": 1596844800.0,
+                "Groups": []
+            }
+        }
+
+        crud = CRUD()
+        crud.update_users("0","Trust",75)
+        #modify_users doit être apellé avec la nouvelle valeur de Trust
+        mock_modify_users_file.assert_called_once_with(new_user_data)
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_Returns_false_if_SpamN_lower_than_zero(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message": 1596844800.0,
+                "Groups": []
+            }
+        }
+        crud = CRUD()
+        #la valeur passée est inférieure à la valeur minimum permise pour SpamN, donc update_users doit retourner faux 
+        self.assertFalse(crud.update_users("0","SpamN",-1))
