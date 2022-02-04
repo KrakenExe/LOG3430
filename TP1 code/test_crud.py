@@ -708,4 +708,23 @@ class TestCRUD(unittest.TestCase):
         #le format de "invalid_email" n'est pas valide, donc add_new_user doit retourner faux
         self.assertFalse(crud.add_new_user("invalid_email",""))
 
+    @patch("crud.CRUD.modify_users_file")
+    @patch("crud.CRUD.read_users_file")
+    def test_add_new_user_Returns_false_if_email_already_exists(self, mock_read_users_file, mock_modify_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": "",
+                "Date_of_last_seen_message": "",
+                "Groups": []
+            }
+        }
+        crud = CRUD()
+        #l'utilisateur "test@gmail.com" existe deja, donc add_new_user doit renvoyer faux
+        self.assertFalse(crud.add_new_user("test@gmail.com", "2020-08-08"))
+    
+
     
