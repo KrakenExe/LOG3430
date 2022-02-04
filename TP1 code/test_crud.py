@@ -797,7 +797,7 @@ class TestCRUD(unittest.TestCase):
 
     @patch("crud.CRUD.read_users_file")
     @patch("crud.CRUD.modify_users_file")
-    def test_update_users_Returns_false_if_Date_of_last_seen_message_isnt_latest(self, mock_modify_users_file, mock_read_users_file):
+    def test_update_users_Returns_false_if_Date_of_last_seen_message_is_older_than_previous(self, mock_modify_users_file, mock_read_users_file):
         mock_read_users_file.return_value = {
             "0":{
                 "name": "test@gmail.com",
@@ -811,8 +811,40 @@ class TestCRUD(unittest.TestCase):
         }
         crud = CRUD()
         #la date passée est plus ancienne que la date du message le plus récent, donc update_users doit retourner faux
-        print("\nbefore")
         self.assertFalse(crud.update_users("0","Date_of_last_seen_message","1999-08-08"))
 
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.modify_users_file")
+    def test_update_users_Correctly_updates_Date_of_last_seen_message(self, mock_modify_users_file, mock_read_users_file):
+        mock_read_users_file.return_value = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message": 1596844800.0,
+                "Groups": []
+            }
+        }
+        
+        crud = CRUD()
+        date = "2042-08-08"
+        unix_date = crud.convert_to_unix(date)
+
+        new_user_data = {
+            "0":{
+                "name": "test@gmail.com",
+                "Trust": 50,
+                "SpamN": 0,
+                "HamN": 0,
+                "Date_of_first_seen_message": 1596844800.0,
+                "Date_of_last_seen_message":  unix_date,
+                "Groups": []
+            }
+        }
+
+        crud.update_users("0","Date_of_last_seen_message","2042-08-08")
+        mock_modify_users_file.assert_called_once_with(new_user_data)
 
         
