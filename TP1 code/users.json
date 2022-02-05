@@ -1,1 +1,47 @@
-{}
+{
+  "1": {
+    "name": "john@gmail.com",
+    "Trust": 100,
+    "SpamN": 0,
+    "HamN": 20,
+    "Date_of_first_seen_message": 1556844800.0,
+    "Date_of_last_seen_message": 1596844800.0,
+    "Groups": ["default", "poly", "cdn"]
+  },
+  "2": {
+    "name": "micheal@mail.com",
+    "Trust": 68.45454,
+    "SpamN": 0,
+    "HamN": 50,
+    "Date_of_first_seen_message": 149000000.0,
+    "Date_of_last_seen_message": 479000000.0,
+    "Groups": ["default"]
+  },
+  "3": {
+    "name": "scott@mail.com",
+    "Trust": 70.45454,
+    "SpamN": 50,
+    "HamN": 250,
+    "Date_of_first_seen_message": 1596844800.0,
+    "Date_of_last_seen_message": 2596844800.0,
+    "Groups": ["default", "montreal"]
+  },
+  "4": {
+    "name": "eddy@mail.com",
+    "Trust": 80.45454,
+    "SpamN": 200,
+    "HamN": 324,
+    "Date_of_first_seen_message": 1996874800.0,
+    "Date_of_last_seen_message": 2596846800.0,
+    "Groups": ["default", "montreal", "cdn"]
+  },
+  "5": {
+    "name": "brad@mail.com",
+    "Trust": 90.45454,
+    "SpamN": 150,
+    "HamN": 300,
+    "Date_of_first_seen_message": 116844800.0,
+    "Date_of_last_seen_message": 2006844800.0,
+    "Groups": ["default", "poly"]
+  }
+}
