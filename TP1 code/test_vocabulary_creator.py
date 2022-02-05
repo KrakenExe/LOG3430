@@ -10,7 +10,7 @@ class TestVocabularyCreator(unittest.TestCase):
         self.clean_body_spam = [{"o"}, {"r"}, {"b"}]  # données pour mocker "return_value" du "clean_text"
         self.clean_subject_ham = [{"o"}, {"r"}, {"b"}]  # données pour mocker "return_value" du "clean_text"
         self.clean_body_ham = [{"o"}, {"r"}, {"b"}]  # données pour mocker "return_value" du "clean_text"
-        self.vocab_expected = {}  # vocabulaire avec les valeurs de la probabilité calculées correctement
+        self.vocab_expected = True  # vocabulaire avec les valeurs de la probabilité calculées correctement
 
     def tearDown(self):
         pass
@@ -40,7 +40,7 @@ class TestVocabularyCreator(unittest.TestCase):
         mock_clean_text.side_effect = side_effect
         print("Test 1 executed")
         mock_write_data_to_vocab_file.return_value = True
-        self.assertEqual(vocabulary.create_vocab(), True)
+        self.assertEqual(vocabulary.create_vocab(), self.vocab_expected)
     
     ###########################################
     #               CUSTOM TEST               #
@@ -52,6 +52,10 @@ class TestVocabularyCreator(unittest.TestCase):
     def test_create_vocab_spam_false_Returns_vocabulary_with_correct_values(
         self, mock_write_data_to_vocab_file, mock_clean_text, mock_load_dict
     ):
+
+        """Description: Même chose que pour le test test_create_vocab_spam_false_Returns_vocabulary_with_correct_values
+        mais on test avec Spam = false cette fois pour pouvoir rentrer dans les else
+        """
         vocabulary = VocabularyCreator()
         mock_load_dict.return_value = self.mails_false
         list_of_values = [self.clean_subject_ham, self.clean_subject_spam, self.clean_body_ham, self.clean_body_spam]
@@ -61,4 +65,4 @@ class TestVocabularyCreator(unittest.TestCase):
         mock_clean_text.side_effect = side_effect
         print("Test 2 executed")
         mock_write_data_to_vocab_file.return_value = True
-        self.assertEqual(vocabulary.create_vocab(), True)
+        self.assertEqual(vocabulary.create_vocab(), self.vocab_expected)
