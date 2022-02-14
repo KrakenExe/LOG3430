@@ -34,18 +34,17 @@ def CACC():
     G_true_value = 75
     G_false_value = 25
 
-    minor_clause_entry = 0b000 #représente les entrées des clauses mineures. On l'incrémente de 1 à chaque itération
-
     # P en clause majeure
     for i in range(8):
-        entry_as_string = str(minor_clause_entry)
+        entry_as_string = str(format(i, '#05b'))[2:]
+        print(entry_as_string)
         H = H_true_value if entry_as_string[0]=='1' else H_false_value
         U = U_true_value if entry_as_string[1]=='1' else U_false_value
         G = G_true_value if entry_as_string[2]=='1' else G_false_value
-        if spam_classification_1(True,H,U,G) != spam_classification_1(True,H,U,G):
+        if spam_classification_1(True,H,U,G) != spam_classification_1(False,H,U,G):
             CACC_test_set.append([True,H,U,G])
+            CACC_test_set.append([False,H,U,G])
             break
-        minor_clause_entry+=1
     print(CACC_test_set)    
 
 CACC()
