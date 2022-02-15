@@ -9,8 +9,6 @@ import re
 
 N_MINOR_CLAUSE_COMBINATIONS = 8
 N_CLAUSES = 4
-N_GICC_CASES = 4
-
 
 class Coverage_Type(Enum):
     CACC = 0
@@ -92,26 +90,29 @@ def iterate_minor_clauses(coverage_type):
 
             if GICC_criteria_met and first_call_result and not predicate_was_true:
 
-                if first_call_result not in test_set:
+                if first_call_input not in test_set:
                     test_set.append(first_call_input)
 
-                if second_call_result not in test_set:
+                if second_call_input not in test_set:
                     test_set.append(second_call_input)
 
                 predicate_was_true = True
 
             if GICC_criteria_met and not first_call_result and not predicate_was_false:    
 
-                if first_call_result not in test_set:
+                if first_call_input not in test_set:
                     test_set.append(first_call_input)
 
-                if second_call_result not in test_set:
+                if second_call_input not in test_set:
                     test_set.append(second_call_input)
 
                 predicate_was_false = True
 
             if predicate_was_true and predicate_was_false or CACC_criteria_met:
                 break
+
+
+   
 
     print("\njeu de test pour le critère {coverage}:\n".format(coverage=coverage_type.name))
     for i in range(len(test_set)):
