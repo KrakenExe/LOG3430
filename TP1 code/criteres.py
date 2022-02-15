@@ -3,6 +3,23 @@ from vocabulary_creator import VocabularyCreator
 from renege import RENEGE
 import re
 
+N_MINOR_CLAUSE_COMBINATIONS = 8
+N_CLAUSES = 4
+
+
+# valeurs qui mettent la variable associée à vrai / faux dans les fonctions spam_classification (valeur à [0] = faux, [1] = vrai)
+P_VALUES = [False,True]
+H_VALUES = [25,15]
+U_VALUES = [75,25]
+G_VALUES = [25,75]
+FALSE_INDEX = 0
+TRUE_INDEX = 1
+
+#index pour l'affichage du jeu de test
+P_INDEX = 0
+H_INDEX = 1
+U_INDEX = 2
+G_INDEX = 3
 
 
 def spam_classification_1(P,H,U,G):
@@ -20,22 +37,7 @@ def spam_classification_2(P,H,U,G):
     return S
 
 def CACC():
-    N_MINOR_CLAUSE_COMBINATIONS = 8
-    N_CLAUSES = 4
     CACC_test_set = []
-
-    # valeurs qui mettent la variable associée à vrai / faux dans les fonctions spam_classification (valeur à [0] = faux, [1] = vrai)
-    P_VALUES = [False,True]
-    H_VALUES = [25,15]
-    U_VALUES = [75,25]
-    G_VALUES = [25,75]
-
-    #index pour l'affichage du jeu de test
-    P_INDEX = 0
-    H_INDEX = 1
-    U_INDEX = 2
-    G_INDEX = 3
-
     for i in range(N_CLAUSES):
 
         for j in range(N_MINOR_CLAUSE_COMBINATIONS):
@@ -46,38 +48,29 @@ def CACC():
             minor_clause_2 = (entry_as_binary >> 1) & 1
             minor_clause_3 = (entry_as_binary >> 0) & 1
 
-            # si P est la clause majeure
-            if i==0:
-                major_clause_true = spam_classification_1(P_VALUES[1],H_VALUES[minor_clause_1],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3])
-                major_clause_false = spam_classification_1(P_VALUES[0],H_VALUES[minor_clause_1],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3])
-                if major_clause_true != major_clause_false:
-                    CACC_test_set.append([P_VALUES[1],H_VALUES[minor_clause_1],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3]])
-                    CACC_test_set.append([P_VALUES[0],H_VALUES[minor_clause_1],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3]])
-                    break
-            # si H est la clause majeure
-            elif i==1:
-                major_clause_true = spam_classification_1(P_VALUES[minor_clause_1],H_VALUES[1],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3])
-                major_clause_false = spam_classification_1(P_VALUES[minor_clause_1],H_VALUES[0],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3])
-                if major_clause_true != major_clause_false:
-                    CACC_test_set.append([P_VALUES[minor_clause_1],H_VALUES[1],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3]])
-                    CACC_test_set.append([P_VALUES[minor_clause_1],H_VALUES[0],U_VALUES[minor_clause_2],G_VALUES[minor_clause_3]])
-                    break
-            # si U est la clause majeure
-            elif i==2:
-                major_clause_true = spam_classification_1(P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[1],G_VALUES[minor_clause_3])
-                major_clause_false = spam_classification_1(P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[0],G_VALUES[minor_clause_3])
-                if major_clause_true != major_clause_false:
-                    CACC_test_set.append([P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[1],G_VALUES[minor_clause_3]])
-                    CACC_test_set.append([P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[0],G_VALUES[minor_clause_3]])
-                    break
-            # si G est la clause majeure 
-            elif i==3:
-                major_clause_true = spam_classification_1(P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[minor_clause_3],G_VALUES[1])
-                major_clause_false = spam_classification_1(P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[minor_clause_3],G_VALUES[0])
-                if major_clause_true != major_clause_false:
-                    CACC_test_set.append([P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[minor_clause_3],G_VALUES[1]])
-                    CACC_test_set.append([P_VALUES[minor_clause_1],H_VALUES[minor_clause_2],U_VALUES[minor_clause_3],G_VALUES[0]])
-                    break
+            P_value_first_call = P_VALUES[FALSE_INDEX] if i==P_INDEX else P_VALUES[minor_clause_1]
+            P_value_second_call = P_VALUES[TRUE_INDEX] if i==P_INDEX else P_VALUES[minor_clause_1]
+            H_value_first_call = H_VALUES[TRUE_INDEX] if i==H_INDEX else (H_VALUES[minor_clause_1] if i==P_INDEX else H_VALUES[minor_clause_2])
+            H_value_second_call = H_VALUES[FALSE_INDEX] if i==H_INDEX else (H_VALUES[minor_clause_1] if i==P_INDEX else H_VALUES[minor_clause_2])
+            U_value_first_call = U_VALUES[FALSE_INDEX] if i==U_INDEX else (U_VALUES[minor_clause_3] if i==G_INDEX else U_VALUES[minor_clause_2]) 
+            U_value_second_call = U_VALUES[TRUE_INDEX] if i==U_INDEX else (U_VALUES[minor_clause_3] if i==G_INDEX else U_VALUES[minor_clause_2])
+            G_value_first_call = G_VALUES[FALSE_INDEX] if i==G_INDEX else U_VALUES[minor_clause_3]
+            G_value_second_call = G_VALUES[TRUE_INDEX] if i==G_INDEX else U_VALUES[minor_clause_3]
+
+            first_call_input = [P_value_first_call,H_value_first_call,U_value_first_call,G_value_first_call]
+            second_call_input = [P_value_second_call,H_value_second_call,U_value_second_call,G_value_second_call]
+
+            first_call_result = spam_classification_1(P_value_first_call,H_value_first_call,U_value_first_call,G_value_first_call)
+            second_call_result = spam_classification_1(P_value_second_call,H_value_second_call,U_value_second_call,G_value_second_call)
+
+
+            if first_call_result != second_call_result:
+                if first_call_input not in CACC_test_set:
+                    CACC_test_set.append(first_call_input)
+                if second_call_input not in CACC_test_set:
+                    CACC_test_set.append(second_call_input)
+                break
+            
     print("jeu de test pour le critère CACC:\n")
     for i in range(len(CACC_test_set)):
         output = "d{index} = <(P={P}, H={H}, U={U}, G={G}),({result})>"
