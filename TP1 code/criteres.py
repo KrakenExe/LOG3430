@@ -139,10 +139,11 @@ print("\n#######################################################################
 #                     #
 #######################
 
-def print_test_inputs(test_set_S_IC, test_set_not_S_IC):
-    print("Jeu de test IC pour le prédicat S:")
-    print(f"d1 = <P={P_VALUES[test_set_S_IC['first_choice'][0][0]]}, H={H_VALUES[test_set_S_IC['first_choice'][0][1]]}, U={U_VALUES[test_set_S_IC['first_choice'][0][2]]}, G={G_VALUES[test_set_S_IC['first_choice'][0][3]]}>")
-    print(f"d2 = <P={P_VALUES[test_set_not_S_IC['first_choice'][0][0]]}, H={H_VALUES[test_set_not_S_IC['first_choice'][0][1]]}, U={U_VALUES[test_set_not_S_IC['first_choice'][0][2]]}, G={G_VALUES[test_set_not_S_IC['first_choice'][0][3]]}>")
+def print_test_set(test_set_IC, test_set_not_IC):
+    print("Jeu de test qui satisfait le critère IC pour le prédicat S:")
+    output = "d{index} = <P={P}, H={H}, U={U}, G={G}),({result})>"
+    print(output.format(index=1, P=P_VALUES[test_set_IC[0]], H=H_VALUES[test_set_IC[1]], U=U_VALUES[test_set_IC[2]], G=G_VALUES[test_set_IC[3]], result=bool(test_set_IC[4])))
+    print(output.format(index=2, P=P_VALUES[test_set_not_IC[0]], H=H_VALUES[test_set_not_IC[1]], U=U_VALUES[test_set_not_IC[2]], G=G_VALUES[test_set_not_IC[3]], result=bool(test_set_not_IC[4])))
 
 def replaceBooleanOps(expression):
     expression = expression.replace("and","&")
@@ -153,13 +154,13 @@ def replaceBooleanOps(expression):
 
 def truth_table_S(expression):
     print("Expression DNF:")
-    print("  S = " + expression.upper())
+    print(f"  S = {expression.upper()}")
     expression = expression.lower()
     implicants = [s.strip() for s in expression.split("or")]
     implicants_bitwise = [replaceBooleanOps(s) for s in implicants]
     implicants = [s.upper() for s in implicants]
     expression_bitwise = replaceBooleanOps(expression)
-    test_set_S_IC = {"first_choice": [], "second_choice": []}
+    test_set_S_IC = []
     if len(implicants) > 2:
         print("\nTable de vérité prédicat NOT S:")
         print("  -----------------------------------------------------")
@@ -173,11 +174,8 @@ def truth_table_S(expression):
                         i1 = eval(implicants_bitwise[0]) & 0x01
                         i2 = eval(implicants_bitwise[1]) & 0x01
                         i3 = eval(implicants_bitwise[2]) & 0x01
-
-                        if i1 & i2:
-                            test_set_S_IC["first_choice"].append([p, h, u, g])
-                        elif (i1 ^ i2) & (i1 ^ i3) & (i2 ^ i3):
-                            test_set_S_IC["second_choice"].append([p, h, u, g])
+                        if i1 & i2 & i3:
+                            test_set_IC = [p, h, u, g, s]
                         print(f"  | {str(p)} | {str(h)} | {str(u)} | {str(g)} |   {str(i1)}   |       {str(i2)}       |   {str(i3)}   | {str(s)} |" )
                         print("  -----------------------------------------------------")
     else:   
@@ -193,19 +191,17 @@ def truth_table_S(expression):
                         i1 = eval(implicants_bitwise[0]) & 0x01
                         i2 = eval(implicants_bitwise[1]) & 0x01
                         if i1 & i2:
-                            test_set_S_IC["first_choice"].append([p, h, u, g])
-                        elif i1 ^ i2:
-                            test_set_S_IC["second_choice"].append([p, h, u, g])
+                            test_set_IC = [p, h, u, g, s]
                         print(f"  | {str(p)} | {str(h)} | {str(u)} | {str(g)} |        {str(i1)}        |          {str(i2)}          | {str(s)} |" )
                         print("  -------------------------------------------------------------")
  
     print("\n#########################################################################\n")
-    return test_set_S_IC
+    return test_set_IC
 
 
 S_expr_DNF = "(P AND H AND U) OR (P AND U AND NOT G)"
 not_S_expr_DNF = "NOT P OR (G AND NOT H) OR NOT U"
-print_test_inputs(truth_table_S(S_expr_DNF), truth_table_S(not_S_expr_DNF))
+print_test_set(truth_table_S(S_expr_DNF), truth_table_S(not_S_expr_DNF))
 
 
 
