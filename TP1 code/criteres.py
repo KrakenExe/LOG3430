@@ -141,7 +141,7 @@ print("\n#######################################################################
 
 def print_test_set(test_set_IC, test_set_not_IC):
     print("Jeu de test qui satisfait le critère IC pour le prédicat S:")
-    output = "d{index} = <P={P}, H={H}, U={U}, G={G}),({result})>"
+    output = "d{index} = <(P={P}, H={H}, U={U}, G={G}), ({result})>"
     print(output.format(index=1, P=P_VALUES[test_set_IC[0]], H=H_VALUES[test_set_IC[1]], U=U_VALUES[test_set_IC[2]], G=G_VALUES[test_set_IC[3]], result=bool(test_set_IC[4])))
     print(output.format(index=2, P=P_VALUES[test_set_not_IC[0]], H=H_VALUES[test_set_not_IC[1]], U=U_VALUES[test_set_not_IC[2]], G=G_VALUES[test_set_not_IC[3]], result=bool(test_set_not_IC[4])))
 
@@ -154,14 +154,14 @@ def replaceBooleanOps(expression):
 
 def truth_table_S(expression):
     print("Expression DNF:")
-    print(f"  S = {expression.upper()}")
     expression = expression.lower()
     implicants = [s.strip() for s in expression.split("or")]
     implicants_bitwise = [replaceBooleanOps(s) for s in implicants]
     implicants = [s.upper() for s in implicants]
     expression_bitwise = replaceBooleanOps(expression)
-    test_set_S_IC = []
+    test_set_IC = []
     if len(implicants) > 2:
+        print(f" NOT S = {expression.upper()}")
         print("\nTable de vérité prédicat NOT S:")
         print("  -----------------------------------------------------")
         print(f"  | P | H | U | G | {implicants[0]} | {implicants[1]} | {implicants[2]} | S |")
@@ -179,6 +179,7 @@ def truth_table_S(expression):
                         print(f"  | {str(p)} | {str(h)} | {str(u)} | {str(g)} |   {str(i1)}   |       {str(i2)}       |   {str(i3)}   | {str(s)} |" )
                         print("  -----------------------------------------------------")
     else:   
+        print(f" S = {expression.upper()}")
         print("\nTable de vérité prédicat S:")
         print("  -------------------------------------------------------------")
         print(f"  | P | H | U | G | {implicants[0]} | {implicants[1]} | S |")
