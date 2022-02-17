@@ -1,5 +1,5 @@
-from ast import Break
-from asyncio.windows_events import NULL
+from ast import Break, For
+# from asyncio.windows_events import NULL
 from operator import truediv
 from email_analyzer import EmailAnalyzer
 from vocabulary_creator import VocabularyCreator
@@ -130,3 +130,82 @@ def GICC():
 
 CACC()
 GICC()
+print("\n#########################################################################\n")
+
+
+#######################
+#                     #
+#  Implémentation IC  #            
+#                     #
+#######################
+
+def print_test_inputs(test_set_S_IC, test_set_not_S_IC):
+    print("Jeu de test IC pour le prédicat S:")
+    print(f"d1 = <P={P_VALUES[test_set_S_IC['first_choice'][0][0]]}, H={H_VALUES[test_set_S_IC['first_choice'][0][1]]}, U={U_VALUES[test_set_S_IC['first_choice'][0][2]]}, G={G_VALUES[test_set_S_IC['first_choice'][0][3]]}>")
+    print(f"d2 = <P={P_VALUES[test_set_not_S_IC['first_choice'][0][0]]}, H={H_VALUES[test_set_not_S_IC['first_choice'][0][1]]}, U={U_VALUES[test_set_not_S_IC['first_choice'][0][2]]}, G={G_VALUES[test_set_not_S_IC['first_choice'][0][3]]}>")
+
+def replaceBooleanOps(expression):
+    expression = expression.replace("and","&")
+    expression = expression.replace("xor","^")
+    expression = expression.replace("or","|")
+    expression = expression.replace("not ","~")
+    return expression
+
+def truth_table_S(expression):
+    print("Expression DNF:")
+    print("  S = " + expression.upper())
+    expression = expression.lower()
+    implicants = [s.strip() for s in expression.split("or")]
+    implicants_bitwise = [replaceBooleanOps(s) for s in implicants]
+    implicants = [s.upper() for s in implicants]
+    expression_bitwise = replaceBooleanOps(expression)
+    test_set_S_IC = {"first_choice": [], "second_choice": []}
+    if len(implicants) > 2:
+        print("\nTable de vérité prédicat NOT S:")
+        print("  -----------------------------------------------------")
+        print(f"  | P | H | U | G | {implicants[0]} | {implicants[1]} | {implicants[2]} | S |")
+        print("  -----------------------------------------------------")
+        for p in range(0,2):
+            for h in range(0,2):
+                for u in range(0,2):
+                    for g in range(0,2):
+                        s = eval(expression_bitwise) & 0x01
+                        i1 = eval(implicants_bitwise[0]) & 0x01
+                        i2 = eval(implicants_bitwise[1]) & 0x01
+                        i3 = eval(implicants_bitwise[2]) & 0x01
+
+                        if i1 & i2:
+                            test_set_S_IC["first_choice"].append([p, h, u, g])
+                        elif (i1 ^ i2) & (i1 ^ i3) & (i2 ^ i3):
+                            test_set_S_IC["second_choice"].append([p, h, u, g])
+                        print(f"  | {str(p)} | {str(h)} | {str(u)} | {str(g)} |   {str(i1)}   |       {str(i2)}       |   {str(i3)}   | {str(s)} |" )
+                        print("  -----------------------------------------------------")
+    else:   
+        print("\nTable de vérité prédicat S:")
+        print("  -------------------------------------------------------------")
+        print(f"  | P | H | U | G | {implicants[0]} | {implicants[1]} | S |")
+        print("  -------------------------------------------------------------")
+        for p in range(0,2):
+            for h in range(0,2):
+                for u in range(0,2):
+                    for g in range(0,2):
+                        s = eval(expression_bitwise) & 0x01
+                        i1 = eval(implicants_bitwise[0]) & 0x01
+                        i2 = eval(implicants_bitwise[1]) & 0x01
+                        if i1 & i2:
+                            test_set_S_IC["first_choice"].append([p, h, u, g])
+                        elif i1 ^ i2:
+                            test_set_S_IC["second_choice"].append([p, h, u, g])
+                        print(f"  | {str(p)} | {str(h)} | {str(u)} | {str(g)} |        {str(i1)}        |          {str(i2)}          | {str(s)} |" )
+                        print("  -------------------------------------------------------------")
+ 
+    print("\n#########################################################################\n")
+    return test_set_S_IC
+
+
+S_expr_DNF = "(P AND H AND U) OR (P AND U AND NOT G)"
+not_S_expr_DNF = "NOT P OR (G AND NOT H) OR NOT U"
+print_test_inputs(truth_table_S(S_expr_DNF), truth_table_S(not_S_expr_DNF))
+
+
+
