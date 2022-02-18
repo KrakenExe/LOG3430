@@ -2,6 +2,8 @@ import json
 from vocabulary_creator import VocabularyCreator
 from renege import RENEGE
 from email_analyzer import EmailAnalyzer
+from criteres import Criteres
+import os
 
 
 
@@ -44,8 +46,20 @@ def evaluate():
     print("Recall: ", round(tp / (tp + fn), 2))
     return True
 
+def tp2():
+    S_expr_DNF = "(P AND H AND U) OR (P AND U AND NOT G)"
+    not_S_expr_DNF = "NOT P OR (G AND NOT H) OR NOT U"
+    criteres = Criteres()
+    print("\n#########################################################################")
+    print("jeux de test pour les critères CACC, GICC et IC")
+    print("#########################################################################")
+    criteres.CACC()
+    criteres.GICC()
+    criteres.print_test_set(criteres.truth_table_S(S_expr_DNF), criteres.truth_table_S(not_S_expr_DNF))
 
 if __name__ == "__main__":
+
+    
 
     # 1. Creation de vocabulaire.
     vocab = VocabularyCreator()
@@ -57,3 +71,6 @@ if __name__ == "__main__":
 
     #3. Evaluation de performance du modele avec la fonction evaluate()
     evaluate()
+
+    #4.
+    tp2()
