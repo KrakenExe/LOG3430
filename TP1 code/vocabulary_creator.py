@@ -32,7 +32,7 @@ class VocabularyCreator:
         Sortie: bool, 'True' pour success, 'False' dans le cas de failure.
         '''
         print("Creating vocabulary")
-
+        print(os.getcwd())
         dataset = self.load_dict()
 
         occ_spam_sub = {}
