@@ -7,7 +7,7 @@ import os
 
 
 
-def evaluate():
+def evaluate(clean_option):
     tp = 0
     tn = 0
     fp = 0
@@ -30,13 +30,13 @@ def evaluate():
         body = new_email["Body"]
         spam = new_email["Spam"]
 
-        if ((analyzer.is_spam(subject, body))) and (spam == "true"):
+        if ((analyzer.is_spam(subject, body,clean_option))) and (spam == "true"):
             tp += 1
-        if (not (analyzer.is_spam(subject, body))) and (spam == "false"):
+        if (not (analyzer.is_spam(subject, body, clean_option))) and (spam == "false"):
             tn += 1
-        if ((analyzer.is_spam(subject, body))) and (spam == "false"):
+        if ((analyzer.is_spam(subject, body, clean_option))) and (spam == "false"):
             fp += 1
-        if (not (analyzer.is_spam(subject, body))) and (spam == "true"):
+        if (not (analyzer.is_spam(subject, body, clean_option))) and (spam == "true"):
             fn += 1
         total += 1
     
@@ -60,17 +60,17 @@ def tp2():
 if __name__ == "__main__":
 
     #os.chdir("C:/Users/lasal/Desktop/LOG3430/TP1 code")
-    
+
     # 1. Creation de vocabulaire.
     vocab = VocabularyCreator()
-    vocab.create_vocab(1)
+    vocab.create_vocab(1,0)
 
     # 2. Classification des emails et initialisation des utilisateurs et des groupes.
     renege = RENEGE()
     renege.classify_emails()
 
     #3. Evaluation de performance du modele avec la fonction evaluate()
-    evaluate()
+    evaluate(0)
 
     #4.
     tp2()

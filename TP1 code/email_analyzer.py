@@ -12,7 +12,7 @@ class EmailAnalyzer:
         self.cleaning = TextCleaning()
         self.voc_data = {}
 
-    def is_spam(self, subject_orig, body_orig):
+    def is_spam(self, subject_orig, body_orig,clean_option):
         '''
         Description: fonction pour verifier si e-mail est spam ou ham,
         en calculant les probabilites d'etre spam et ham, 
@@ -20,8 +20,8 @@ class EmailAnalyzer:
         Sortie: 'True' - si l'email est spam, 'False' - si email est ham.
         '''
         # Clean email's subject and body
-        email_subject = self.clean_text(subject_orig)
-        email_body    = self.clean_text(body_orig)
+        email_subject = self.clean_text(subject_orig,clean_option)
+        email_body    = self.clean_text(body_orig,clean_option)
 
         # Get the spam/ham probabilities
         p_subject_spam, p_subject_ham = self.spam_ham_subject_prob(email_subject)
@@ -100,8 +100,8 @@ class EmailAnalyzer:
         
         return (p_spam, p_ham)
     
-    def clean_text(self, text): #pragma: no cover
-        return self.cleaning.clean_text(text)
+    def clean_text(self, text, clean_option): #pragma: no cover
+        return self.cleaning.clean_text(text,clean_option)
 
     def load_dict(self): #pragma: no cover
         # Open vocabulary 
