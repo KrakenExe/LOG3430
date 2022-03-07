@@ -67,7 +67,7 @@ if __name__ == "__main__":
 
     # 2. Classification des emails et initialisation des utilisateurs et des groupes.
     renege = RENEGE()
-    renege.classify_emails()
+    renege.classify_emails(0)
 
     #3. Evaluation de performance du modele avec la fonction evaluate()
     evaluate(0)
