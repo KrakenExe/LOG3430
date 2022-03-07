@@ -59,11 +59,11 @@ def tp2():
 
 if __name__ == "__main__":
 
+    #os.chdir("C:/Users/lasal/Desktop/LOG3430/TP1 code")
     
-
     # 1. Creation de vocabulaire.
     vocab = VocabularyCreator()
-    vocab.create_vocab()
+    vocab.create_vocab(1)
 
     # 2. Classification des emails et initialisation des utilisateurs et des groupes.
     renege = RENEGE()

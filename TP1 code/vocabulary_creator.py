@@ -1,5 +1,6 @@
 import json
 import os
+from tkinter import W
 from text_cleaner import TextCleaning
 
 
@@ -24,7 +25,7 @@ class VocabularyCreator:
 
         return proba_dict
 
-    def create_vocab(self):
+    def create_vocab(self,min_frequency):
         '''
         Description: fonction pour creer le vocabulaire des mots presents
         dans les e-mails spam et ham et le sauvegarder dans le fichier
@@ -100,6 +101,32 @@ class VocabularyCreator:
                         occ_ham_bod[wd] = 1
                     else:
                         occ_ham_bod[wd] += 1
+
+            # on filtre occ_spam_sub pour enlever les mots qui n'ont pas la fréquence minimale
+            for word in occ_spam_sub:
+                if occ_spam_sub[word] < min_frequency:
+                    del occ_spam_sub[word]
+                    total_occ_spam_sub -= 1
+            
+            # on filtre occ_spam_bod pour enlever les mots qui n'ont pas la fréquence minimale
+            for word in occ_spam_bod:
+                if occ_spam_bod[word] < min_frequency:
+                    del occ_spam_bod[word]
+                    total_occ_spam_bod -= 1
+
+            #on filtre occ_ham_sub pour enlever les mots qui n'ont pas la fréquence minimale
+            for word in occ_ham_sub:
+                if occ_ham_sub[word] < min_frequency:
+                    del occ_ham_sub[word]
+                    total_occ_ham_sub -= 1
+
+            #on filtre occ_ham_bod pour enlever les mots qui n'ont pas la fréquence minimale
+            for word in occ_ham_bod:
+                if occ_ham_bod[word] < min_frequency:
+                    del occ_ham_bod[word]
+                    total_occ_ham_bod -= 1
+
+               
 
         # Create the data dictionary
         p_sub_spam  = self.compute_proba(occ_spam_sub, total_occ_spam_sub)
