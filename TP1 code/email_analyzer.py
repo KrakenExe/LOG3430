@@ -12,7 +12,7 @@ class EmailAnalyzer:
         self.cleaning = TextCleaning()
         self.voc_data = {}
 
-    def is_spam(self, subject_orig, body_orig,clean_option):
+    def is_spam(self, subject_orig, body_orig, clean_option, prob_count, prob_sum):
         '''
         Description: fonction pour verifier si e-mail est spam ou ham,
         en calculant les probabilites d'etre spam et ham, 
@@ -26,13 +26,35 @@ class EmailAnalyzer:
         # Get the spam/ham probabilities
         p_subject_spam, p_subject_ham = self.spam_ham_subject_prob(email_subject)
         p_body_spam,    p_body_ham    = self.spam_ham_body_prob(email_body)
+        p_subject_spam_text, p_subject_ham_text, p_subject_spam_log, p_subject_ham_log = self.spam_ham_subject_prob(email_subject)
+        p_body_spam_text, p_body_ham_text, p_body_spam_log, p_body_ham_log     = self.spam_ham_body_prob_text(email_body)
 
         # Compute the merged probabilities
         p_spam = 0.5 * (p_subject_spam + p_body_spam)
         p_ham  = 0.5 * (p_subject_ham  + p_body_ham)      
 
+        #Decide what formula to use for calculating probability
+        if prob_count == 0:
+            p_sub_spam_count = p_spam * p_subject_spam_text
+            p_sub_ham_count = p_spam * p_subject_ham_text
+            p_body_spam_count = p_spam * p_body_spam_text
+            p_body_ham_count = p_spam * p_body_ham_text
+        else:
+            p_sub_spam_count = p_subject_spam_log + math.log(p_spam)
+            p_sub_ham_count = p_subject_ham_log + math.log(p_spam)
+            p_body_spam_count = p_body_spam_log + math.log(p_spam)
+            p_body_ham_count = p_body_ham_log + math.log(p_spam)
+
+        #Decide what formula to use for combining the probabilities
+        if prob_sum == 0:
+            p_spam_text_sum = 0.6 * p_sub_spam_count + 0.4 * p_body_spam_count
+            p_ham_text_sum = 0.6 * p_sub_ham_count + 0.4 * p_body_ham_count
+        else:
+            p_spam_text_sum = 0.6 * math.log(p_sub_spam_count) + 0.4 * math.log(p_body_spam_count)
+            p_ham_text_sum = 0.6 * math.log(p_sub_ham_count) + 0.4 * math.log(p_body_ham_count)
+
         # Decide is the email is spam or ham
-        if p_spam > p_ham:
+        if p_spam_text_sum > p_ham_text_sum:
             return True 
         else:
             return False
@@ -108,4 +130,80 @@ class EmailAnalyzer:
         with open(self.vocab) as json_data:
             vocabu = json.load(json_data)
         
-        return vocabu
+        return 
+
+    ###########################################
+    #          CUSTOM FUNCTIONS               #
+    ###########################################
+
+    #Custom function for calculating sum of P_spam_body_text and multiplication product of P_spam_body_text
+    def spam_ham_body_prob_text(self, body):
+        '''
+        Description: fonction pour calculer la probabilite
+        que le 'body' d'email est spam ou ham.
+        Sortie: probabilite que email body est spam, probabilite
+        que email body est ham.
+        '''
+        p_body_spam_text = 1.0
+        p_body_ham_text  = 1.0
+        p_body_spam_log = 0.0
+        p_body_ham_log  = 0.0
+
+        voc_data = self.load_dict()
+
+
+        # Parse the text to compute the probability
+        for word in body:
+            # Check the spam probability
+            if word in voc_data["p_body_spam"]:
+                p_body_spam_text *= voc_data["p_body_spam"][word]
+                p_body_spam_log += math.log(p_body_spam_text)
+            else:
+                p_body_spam_text *= 1.0 / (len(voc_data["p_body_spam"]) + 1.0)
+                p_body_spam_log += math.log(p_body_spam_text)
+            
+            # Check the ham probability
+            if word in voc_data["p_body_ham"]:
+                p_body_ham_text *= voc_data["p_body_ham"][word]
+                p_body_ham_log += math.log(p_body_ham_text)
+            else:
+                p_body_ham_text *= 1.0 / (len(voc_data["p_body_ham"]) + 1.0)
+                p_body_ham_log += math.log(p_body_ham_text)
+        
+        return (p_body_spam_text, p_body_ham_text, p_body_spam_log, p_body_ham_log)
+
+    #Custom function for calculating sum of P_spam_subject_text and multiplication product of P_spam_subject_text
+    def spam_ham_subject_prob(self, subject):
+        '''
+        Description: fonction pour calculer la probabilite
+        que le sujet d'email est spam ou ham.
+        Sortie: probabilite que email subject est spam, probabilite
+        que email subject est ham.
+        '''
+        p_sub_spam_text = 1.0
+        p_sub_ham_text  = 1.0
+        p_sub_spam_log = 0.0
+        p_sub_ham_log  = 0.0
+
+        voc_data = self.load_dict()
+
+        # Walk the text to compute the probability
+        for word in subject:
+            # Check the spam probability
+            if word in voc_data["p_sub_spam"]:
+                p_sub_spam_text *= voc_data["p_sub_spam"][word]
+                p_sub_spam_log += math.log(p_sub_spam_text)
+            else:
+                p_sub_spam_text *= 1.0 / (len(voc_data["p_sub_spam"]) + 1.0)
+                p_sub_spam_log += math.log(p_sub_spam_text)
+            
+            # Check the ham probability
+            if word in voc_data["p_sub_ham"]:
+                p_sub_ham_text *= voc_data["p_sub_ham"][word]
+                p_sub_ham_log += math.log(p_sub_ham_text)
+            else:
+                p_sub_ham_text *= 1.0 / (len(voc_data["p_sub_ham"]) + 1.0)
+                p_sub_ham_log += math.log(p_sub_ham_text)
+
+        
+        return (p_sub_spam_text, p_sub_ham_text, p_sub_spam_log, p_sub_ham_log)
