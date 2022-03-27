@@ -36,14 +36,14 @@ class EmailAnalyzer:
         #Decide what formula to use for calculating probability
         if prob_count == 0:
             p_sub_spam_count = p_spam * p_subject_spam_text
-            p_sub_ham_count = p_spam * p_subject_ham_text
+            p_sub_ham_count = p_ham * p_subject_ham_text
             p_body_spam_count = p_spam * p_body_spam_text
-            p_body_ham_count = p_spam * p_body_ham_text
+            p_body_ham_count = p_ham * p_body_ham_text
         else:
             p_sub_spam_count = p_subject_spam_log + math.log(p_spam)
-            p_sub_ham_count = p_subject_ham_log + math.log(p_spam)
+            p_sub_ham_count = p_subject_ham_log + math.log(p_ham)
             p_body_spam_count = p_body_spam_log + math.log(p_spam)
-            p_body_ham_count = p_body_ham_log + math.log(p_spam)
+            p_body_ham_count = p_body_ham_log + math.log(p_ham)
 
         #Decide what formula to use for combining the probabilities
         if prob_sum == 0:

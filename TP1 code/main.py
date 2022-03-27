@@ -7,7 +7,7 @@ import os
 
 
 
-def evaluate(clean_option):
+def evaluate(clean_option, count_option, sum_option):
     tp = 0
     tn = 0
     fp = 0
@@ -30,13 +30,13 @@ def evaluate(clean_option):
         body = new_email["Body"]
         spam = new_email["Spam"]
 
-        if ((analyzer.is_spam(subject, body,clean_option))) and (spam == "true"):
+        if ((analyzer.is_spam(subject, body,clean_option, count_option, sum_option))) and (spam == "true"):
             tp += 1
-        if (not (analyzer.is_spam(subject, body, clean_option))) and (spam == "false"):
+        if (not (analyzer.is_spam(subject, body, clean_option, count_option, sum_option))) and (spam == "false"):
             tn += 1
-        if ((analyzer.is_spam(subject, body, clean_option))) and (spam == "false"):
+        if ((analyzer.is_spam(subject, body, clean_option, count_option, sum_option))) and (spam == "false"):
             fp += 1
-        if (not (analyzer.is_spam(subject, body, clean_option))) and (spam == "true"):
+        if (not (analyzer.is_spam(subject, body, clean_option, count_option, sum_option))) and (spam == "true"):
             fn += 1
         total += 1
     
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     renege.classify_emails(0)
 
     #3. Evaluation de performance du modele avec la fonction evaluate()
-    evaluate(0)
+    evaluate(0, 0, 0)
 
     #4.
     tp2()
