@@ -186,140 +186,171 @@ class TestCRUDMadum(unittest.TestCase):
         self.assertDictEqual(crud.groups_data, result)
 
 
-@patch("crud.CRUD.read_users_file")
-@patch("crud.CRUD.read_groups_file")
-def test_transformateurs_sequence2_branche1(self, mock_read_groups_file, mock_read_users_file):
-    mock_read_groups_file.return_value = self.groups_data
-    mock_read_users_file.return_value = self.users_data
-    crud = CRUD()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence2_branche1(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-    ##########################################
-    ## Branche 1 (field == List_of_members) ##
-    ##########################################
-    result = {
-        "0": {
-            "name": "default",
-            "Trust": 50,
-            "List_of_members": ["mark@mail.com"],
-        },
-        "2": {
-            "name": "test_madum",
-            "Trust": 75,
-            "List_of_members": ["alex@mail.com"],
-        },
-    }
+        ##########################################
+        ## Branche 1 (field == Trust) ##
+        ##########################################
+        result = {
+            "0": {
+                "name": "default",
+                "Trust": 50,
+                "List_of_members": ["mark@mail.com"],
+            },
+            "2": {
+                "name": "test_madum",
+                "Trust": 75,
+                "List_of_members": ["alex@gmail.com"],
+            },
+        }
 
-    crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
-    crud.remove_group_member(0, "alex@gmail.com")
-    crud.update_groups(2, "Trust", 75)
-    crud.remove_group(1)
-    self.assertDictEqual(crud.groups_data, result)
-
-
-@patch("crud.CRUD.read_users_file")
-@patch("crud.CRUD.read_groups_file")
-def test_transformateurs_sequence2_branche2(self, mock_read_groups_file, mock_read_users_file):
-    mock_read_groups_file.return_value = self.groups_data
-    mock_read_users_file.return_value = self.users_data
-    crud = CRUD()
-
-    ##########################################
-    ## Branche 2 (field == List_of_members) ##
-    ##########################################
-    crud.add_new_group()
-    crud.remove_group_member()
-    crud.update_groups()
-    crud.remove_group()
-    self.assertListEqual()
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group_member(0, "alex@gmail.com")
+        crud.update_groups(2, "Trust", 75)
+        crud.remove_group(1)
+        self.assertDictEqual(crud.groups_data, result)
 
 
-@patch("crud.CRUD.read_users_file")
-@patch("crud.CRUD.read_groups_file")
-def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_read_users_file):
-    mock_read_groups_file.return_value = self.groups_data
-    mock_read_users_file.return_value = self.users_data
-    crud = CRUD()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence2_branche2(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-    ##########################################
-    ## Branche 3 (field == List_of_members) ##
-    ##########################################
-    crud.add_new_group()
-    crud.remove_group_member()
-    crud.update_groups()
-    crud.remove_group()
-    self.assertListEqual()
+        ##########################################
+        ## Branche 2 (field == name) ##
+        ##########################################
+        result = {
+            "0": {
+                "name": "default",
+                "Trust": 50,
+                "List_of_members": ["mark@mail.com"],
+            },
+            "2": {
+                "name": "hello",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com"],
+            },
+        }
+
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group_member(0, "alex@gmail.com")
+        crud.update_groups(2, "name", "hello")
+        crud.remove_group(1)
+        self.assertDictEqual(crud.groups_data, result)
 
 
-# def test_transformateurs_sequence3_branche1(self):
-#     crud = CRUD()
-#     #Branche 1 (update_groups)
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     self.assertListEqual()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-# def test_transformateurs_sequence3_branche2(self):
-#     crud = CRUD()
-#     #Branche 2 (update_groups)
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     self.assertListEqual()
+        ##########################################
+        ## Branche 3 (field == List_of_members) ##
+        ##########################################
+        result = {
+            "0": {
+                "name": "default",
+                "Trust": 50,
+                "List_of_members": ["mark@mail.com"],
+            },
+            "2": {
+                "name": "test_madum",
+                "Trust": 50,
+                "List_of_members": ["mark@mail.com"],
+            },
+        }
 
-# def test_transformateurs_sequence3_branche3(self):
-#     crud = CRUD()
-#     #Branche 3 (update_groups)
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     self.assertListEqual()
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group_member(0, "alex@gmail.com")
+        crud.update_groups(2, "List_of_members", ["mark@mail.com"])
+        crud.remove_group(1)
+        print(crud.groups_data)
+        print(result)
+        self.assertDictEqual(crud.groups_data, result)
 
-# def test_transformateurs_sequence4(self):
-#     crud = CRUD()
 
-#     #Branche 1 (update_groups)
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     self.assertListEqual()
+# À partir de la séquence 3, nous avons changer la méthode de test pour réduire le nombre de cas de test.
+# Nous testons dans les 3 branches de update_groups() à l'intérieur du même cas de test.
 
-#     #Branche 2 (update_groups)
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     self.assertListEqual()
 
-#     #Branche 3 (update_groups)
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     self.assertListEqual()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence3(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "1": {
+                "name": "hello",
+                "Trust": 75,
+                "List_of_members": ["mark@mail.com"],
+            },
+            "2": {
+                "name": "test_madum",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com"],
+            },
+        }
+
+        # Branche 1
+        crud.update_groups(1, "Trust", 75)
+        # Branche 2
+        crud.update_groups(1, "name", "hello")
+        # Branche 3
+        crud.update_groups(1, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        crud.remove_group_member(1, "alex@gmail.com")
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group(0)
+        self.assertDictEqual(crud.groups_data, result)
+
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence4(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "1": {
+                "name": "hello",
+                "Trust": 75,
+                "List_of_members": ["mark@mail.com", "alex@gmail.com"],
+            },
+            "2": {
+                "name": "test_madum",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com"],
+            },
+        }
+
+        crud.remove_group_member(0, "mark@mail.com")
+        # Branche 1
+        crud.update_groups(1, "Trust", 75)
+        # Branche 2
+        crud.update_groups(1, "name", "hello")
+        # Branche 3
+        crud.update_groups(1, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group(0)
+        self.assertDictEqual(crud.groups_data, result)
+
 
 # def test_transformateurs_sequence5(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.add_new_group()
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.add_new_group()
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.add_new_group()
 #     crud.update_groups()
 #     crud.remove_group_member()
 #     crud.remove_group()
@@ -327,22 +358,8 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence6(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
 #     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
 #     crud.update_groups()
 #     crud.add_new_group()
 #     crud.remove_group_member()
@@ -351,22 +368,8 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence7(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
 #     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
 #     crud.update_groups()
 #     crud.add_new_group()
 #     crud.remove_group()
@@ -375,23 +378,9 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence8(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.add_new_group()
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.add_new_group()
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.add_new_group()
 #     crud.update_groups()
 #     crud.remove_group()
 #     crud.remove_group_member()
@@ -399,23 +388,9 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence9(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group()
 #     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group()
 #     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group()
 #     crud.update_groups()
 #     crud.add_new_group()
 #     crud.remove_group_member()
@@ -423,22 +398,8 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence10(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
 #     crud.update_groups()
 #     crud.remove_group()
 #     crud.add_new_group()
@@ -447,118 +408,50 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence11(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.add_new_group()
 #     crud.remove_group()
+#     crud.update_groups()
+#     crud.update_groups()
 #     crud.update_groups()
 #     crud.remove_group_member()
 #     self.assertListEqual()
 
-#     #Branche 2 (update_groups)
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     self.assertListEqual()
 
 # def test_transformateurs_sequence12(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group()
 #     crud.add_new_group()
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group()
-#     crud.add_new_group()
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group()
-#     crud.add_new_group()
 #     crud.update_groups()
 #     crud.remove_group_member()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence13(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group()
 #     crud.remove_group_member()
+#     crud.update_groups()
+#     crud.update_groups()
 #     crud.update_groups()
 #     crud.add_new_group()
 #     self.assertListEqual()
 
-#     #Branche 2 (update_groups)
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     self.assertListEqual()
 
 # def test_transformateurs_sequence14(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group_member()
 #     crud.remove_group()
 #     crud.update_groups()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group_member()
-#     crud.remove_group()
 #     crud.update_groups()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group_member()
-#     crud.remove_group()
 #     crud.update_groups()
 #     crud.add_new_group()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence15(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
 #     crud.update_groups()
 #     crud.remove_group()
 #     crud.remove_group_member()
@@ -567,23 +460,9 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence16(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group()
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group()
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group()
 #     crud.update_groups()
 #     crud.remove_group_member()
 #     crud.add_new_group()
@@ -591,23 +470,9 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence17(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group_member()
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group_member()
 #     crud.update_groups()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group_member()
 #     crud.update_groups()
 #     crud.remove_group()
 #     crud.add_new_group()
@@ -615,22 +480,8 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence18(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
 #     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
 #     crud.update_groups()
 #     crud.remove_group_member()
 #     crud.remove_group()
@@ -639,147 +490,62 @@ def test_transformateurs_sequence2_branche3(self, mock_read_groups_file, mock_re
 
 # def test_transformateurs_sequence19(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.add_new_group()
 #     crud.remove_group_member()
 #     crud.remove_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     crud.remove_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     crud.remove_group()
 #     crud.update_groups()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence20(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group_member()
 #     crud.add_new_group()
 #     crud.remove_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.remove_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.remove_group()
 #     crud.update_groups()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence21(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group()
 #     crud.add_new_group()
 #     crud.remove_group_member()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.remove_group_member()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.remove_group_member()
 #     crud.update_groups()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence22(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.add_new_group()
 #     crud.remove_group()
 #     crud.remove_group_member()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.remove_group_member()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.remove_group_member()
 #     crud.update_groups()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence23(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group_member()
 #     crud.remove_group()
 #     crud.add_new_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     crud.add_new_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     crud.add_new_group()
 #     crud.update_groups()
 #     self.assertListEqual()
 
 # def test_transformateurs_sequence24(self):
 #     crud = CRUD()
-
-#     #Branche 1 (update_groups)
 #     crud.remove_group()
 #     crud.remove_group_member()
 #     crud.add_new_group()
 #     crud.update_groups()
-#     self.assertListEqual()
-
-#     #Branche 2 (update_groups)
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.add_new_group()
+#     crud.update_groups()
 #     crud.update_groups()
 #     self.assertListEqual()
-
-#     #Branche 3 (update_groups)
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.update_groups()
-#     self.assertListEqual()
-
 
     
