@@ -64,8 +64,25 @@ class TestCRUDMadum(unittest.TestCase):
         mock_read_users_file.return_value = self.users_data
         crud = CRUD()
         crud.add_new_group("test_madum", 50, ["alex@gmail.com", "mark@mail.com"])
-        group_name = crud.get_groups_data(len(crud.groups_data) - 1, "name")
-        self.assertEqual("test_madum", group_name)
+        result = {
+            "0": {
+                "name": "default",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com", "mark@mail.com"],
+            },
+            "1": {
+                "name": "friends",
+                "Trust": 90,
+                "List_of_members": ["alex@gmail.com"],
+            },
+            "2": {
+                "name": "test_madum",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com", "mark@mail.com"],
+            },
+        }
+        self.checkResult(crud, result)
+
 
     @patch("crud.CRUD.read_users_file")
     @patch("crud.CRUD.read_groups_file")
@@ -75,7 +92,17 @@ class TestCRUDMadum(unittest.TestCase):
         crud = CRUD()
         self.check_result(crud, self.groups_data)
 
-# Permutation des transformateurs
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_other(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+        self.assertEqual(crud.get_new_group_id(), "2") 
+
+    
+
+# Permutation des transformateur
 # 1) remove_group_member,add_new_group,update_groups,remove_group
 # 2) add_new_group,remove_group_member,update_groups,remove_group
 # 3) update_groups,remove_group_member,add_new_group,remove_group
