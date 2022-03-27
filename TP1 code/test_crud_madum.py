@@ -881,45 +881,111 @@ class TestCRUDMadum(unittest.TestCase):
         crud.update_groups(1, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
         self.check_result(crud, result)
 
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence21(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-# def test_transformateurs_sequence21(self):
-#     crud = CRUD()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     self.assertListEqual()
+        result = {
+                "1": {
+                    "name": "hello",
+                    "Trust": 75,
+                    "List_of_members": ["mark@mail.com", "alex@gmail.com"],
+                },
+                "2": {
+                    "name": "test_madum",
+                    "Trust": 50,
+                    "List_of_members": ["alex@gmail.com"],
+                },
+            }
 
-# def test_transformateurs_sequence22(self):
-#     crud = CRUD()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     self.assertListEqual()
+        crud.remove_group(0)
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group_member(1,"alex@gmail.com")
+        crud.update_groups(1, "Trust", 75)
+        crud.update_groups(1, "name", "hello")
+        crud.update_groups(1,"List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        self.check_result(crud,result)
 
-# def test_transformateurs_sequence23(self):
-#     crud = CRUD()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     self.assertListEqual()
+    def test_transformateurs_sequence22(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-# def test_transformateurs_sequence24(self):
-#     crud = CRUD()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     self.assertListEqual()
+        result = {
+                "1": {
+                    "name": "hello",
+                    "Trust": 75,
+                    "List_of_members": ["mark@mail.com", "alex@gmail.com"],
+                },
+                "2": {
+                    "name": "test_madum",
+                    "Trust": 50,
+                    "List_of_members": ["alex@gmail.com"],
+                },
+            }
+
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group(0)
+        crud.remove_group_member(1,"alex@gmail.com")
+        crud.update_groups(1, "Trust", 75)
+        crud.update_groups(1, "name", "hello")
+        crud.update_groups(1,"List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        self.check_result(crud,result)
+
+    def test_transformateurs_sequence23(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+                "1": {
+                    "name": "hello",
+                    "Trust": 75,
+                    "List_of_members": ["mark@mail.com", "alex@gmail.com"],
+                },
+                "2": {
+                    "name": "test_madum",
+                    "Trust": 50,
+                    "List_of_members": ["alex@gmail.com"],
+                },
+            }
+
+        crud.remove_group_member(1,"alex@gmail.com")
+        crud.remove_group(0)
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.update_groups(1, "Trust", 75)
+        crud.update_groups(1, "name", "hello")
+        crud.update_groups(1, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        self.check_result(crud,result)
+
+
+    def test_transformateurs_sequence24(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+                "1": {
+                    "name": "hello",
+                    "Trust": 75,
+                    "List_of_members": ["mark@mail.com", "alex@gmail.com"],
+                },
+                "2": {
+                    "name": "test_madum",
+                    "Trust": 50,
+                    "List_of_members": ["alex@gmail.com"],
+                },
+            }
+
+        crud.remove_group(0)
+        crud.remove_group_member(1,"alex@gmail.com")
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.update_groups(1, "Trust", 75)
+        crud.update_groups(1, "name", "hello")
+        crud.update_groups(1, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        self.check_result(crud,result)
 
     
