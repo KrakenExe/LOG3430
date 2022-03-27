@@ -386,87 +386,254 @@ class TestCRUDMadum(unittest.TestCase):
 #     crud.remove_group_member()
 #     self.assertListEqual()
 
-# def test_transformateurs_sequence9(self):
-#     crud = CRUD()
-#     crud.remove_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
 
-# def test_transformateurs_sequence10(self):
-#     crud = CRUD()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.remove_group_member()
-#     self.assertListEqual()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence9(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-# def test_transformateurs_sequence11(self):
-#     crud = CRUD()
-#     crud.add_new_group()
-#     crud.remove_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     self.assertListEqual()
+        result = {
+            "0": {
+                "name": "Samuel",
+                "Trust": 80,
+                "List_of_members": ["alex@gmail.com", "mark@mail.com"],
+            },
+            "1": {
+                "name": "test_madum",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+        }
 
+        crud.remove_group(1)
+        # Branche 1
+        crud.update_groups(0, "Trust", 80)
+        # Branche 2
+        crud.update_groups(0, "name", "Samuel")
+        # Branche 3
+        crud.update_groups(0, "List_of_members", ["mark@mail.com", "bob@gmail.com"] )
+        crud.add_new_group("test_madum", 50, ["alex@gmail.com"])
+        crud.remove_group_member(0, ["bob@gmail.com"])
+        self.assertDictEqual(crud.groups_data, result)
 
-# def test_transformateurs_sequence12(self):
-#     crud = CRUD()
-#     crud.remove_group()
-#     crud.add_new_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     self.assertListEqual()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence10(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-# def test_transformateurs_sequence13(self):
-#     crud = CRUD()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     self.assertListEqual()
+        result = {
+            "0": {
+                "name": "Duck",
+                "Trust": 75,
+                "List_of_members": ["alex@gmail.com"],
+            },
+            "1": {
+                "name": "test_allo",
+                "Trust": 60,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+        }
 
+        # Branche 1
+        crud.update_groups(1, "Trust", 60)
+        # Branche 2
+        crud.update_groups(1, "name", "test_allo")
+        # Branche 3
+        crud.update_groups(1, "List_of_members", ["bob@gmail.com"])
+        crud.remove_group(0)
+        crud.add_new_group("Duck", 75, ["alex@gmail.com"])
+        crud.remove_group_member(1, ["bob@gmail.com"])
+        self.assertDictEqual(crud.groups_data, result)
 
-# def test_transformateurs_sequence14(self):
-#     crud = CRUD()
-#     crud.remove_group_member()
-#     crud.remove_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.add_new_group()
-#     self.assertListEqual()
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence11(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
 
-# def test_transformateurs_sequence15(self):
-#     crud = CRUD()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.remove_group()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     self.assertListEqual()
+        result = {
+            "1": {
+                "name": "test123",
+                "Trust": 60,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+            "2": {
+                "name": "Maxime",
+                "Trust": 50,
+                "List_of_members": ["alex@gmail.com"],
+            },
+        }
 
-# def test_transformateurs_sequence16(self):
-#     crud = CRUD()
-#     crud.remove_group()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.update_groups()
-#     crud.remove_group_member()
-#     crud.add_new_group()
-#     self.assertListEqual()
+        crud.add_new_group("Maxime", 50, ["alex@gmail.com"])
+        crud.remove_group(0)
+        # Branche 1
+        crud.update_groups(1, "Trust", 60)
+        # Branche 2
+        crud.update_groups(1, "name", "test123")
+        # Branche 3
+        crud.update_groups(1, "List_of_members", ["bob@gmail.com"])
+        crud.remove_group_member(1, ["bob@gmail.com"])
+        self.assertDictEqual(crud.groups_data, result)
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence12(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "0": {
+                "name": "Bob",
+                "Trust": 50,
+                "List_of_members": ["mark@mail.com"],
+            },
+            "1": {
+                "name": "default",
+                "Trust": 70,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+        }
+
+        crud.remove_group(0)
+        crud.add_new_group("Bob", 50, ["mark@mail.com"])
+        # Branche 1
+        crud.update_groups(1, "Trust", 70)
+        # Branche 2
+        crud.update_groups(1, "name", "default")
+        # Branche 3
+        crud.update_groups(1, "List_of_members", ["sam@gmail.com"])
+        crud.remove_group_member(1, ["sam@gmail.com"])
+        self.assertDictEqual(crud.groups_data, result)
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence13(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "0": {
+                "name": "test_madum",
+                "Trust": 45,
+                "List_of_members": ["mark@mail.com", "alex@gmail.com"],
+            }, 
+            "1": {
+                "name": "friends",
+                "Trust": 90,
+                "List_of_members": ["alex@gmail.com"],
+            },
+        }
+
+        crud.remove_group(1)
+        crud.remove_group_member(0, "alex@gmail.com")
+        # Branche 1
+        crud.update_groups(0, "Trust", 45)
+        # Branche 2
+        crud.update_groups(0, "name", "test_madum")
+        # Branche 3
+        crud.update_groups(0, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
+        crud.add_new_group("friends", 90, ["alex@gmail.com"])
+        self.assertDictEqual(crud.groups_data, result)
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence14(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "0": {
+                "name": "default",
+                "Trust": 85,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+            "1": {
+                "name": "strangers",
+                "Trust": 5,
+                "List_of_members": ["alex@gmail.com", "mark@mail.com"],
+            },
+        }
+
+        crud.remove_group_member(0, "alex@gmail.com")
+        crud.remove_group(1)
+        # Branche 1
+        crud.update_groups(0, "Trust", 85)
+        # Branche 2
+        crud.update_groups(0, "name", "default")
+        # Branche 3
+        crud.update_groups(0, "List_of_members", ["alex@gmail.com"])
+        crud.add_new_group("strangers", 5, ["alex@gmail.com", "mark@mail.com"])
+        self.assertDictEqual(crud.groups_data, result)
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence15(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "0": {
+                "name": "Alex",
+                "Trust": 45,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+            "1": {
+                "name": "Someone",
+                "Trust": 15,
+                "List_of_members": ["alex@gmail.com", "mark@mail.com"],
+            },
+        }
+
+        # Branche 1
+        crud.update_groups(0, "Trust", 45)
+        # Branche 2
+        crud.update_groups(0, "name", "Alex")
+        # Branche 3
+        crud.update_groups(0, "List_of_members", ["alex@gmail.com", "mark@mail.com"])
+        crud.remove_group(1)
+        crud.remove_group_member(0, "mark@mail.com")
+        crud.add_new_group("Someone", 15, ["alex@gmail.com", "mark@mail.com"])
+        self.assertDictEqual(crud.groups_data, result)
+
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
+    def test_transformateurs_sequence16(self, mock_read_groups_file, mock_read_users_file):
+        mock_read_groups_file.return_value = self.groups_data
+        mock_read_users_file.return_value = self.users_data
+        crud = CRUD()
+
+        result = {
+            "0": {
+                "name": "Cedric",
+                "Trust": 20,
+                "List_of_members": ["alex@gmail.com"],
+            }, 
+            "1": {
+                "name": "Poly",
+                "Trust": 95,
+                "List_of_members": ["alex@gmail.com", "mark@mail.com"],
+            },
+        }
+
+        crud.remove_group(1)
+        # Branche 1
+        crud.update_groups(0, "Trust", 20)
+        # Branche 2
+        crud.update_groups(0, "name", "Cedric")
+        # Branche 3
+        crud.update_groups(0, "List_of_members", ["alex@gmail.com", "mark@mail.com"])
+        crud.remove_group_member(0, "mark@mail.com")
+        crud.add_new_group("Poly", 95, ["alex@gmail.com", "mark@mail.com"])
+        self.assertDictEqual(crud.groups_data, result)
 
 # def test_transformateurs_sequence17(self):
 #     crud = CRUD()
