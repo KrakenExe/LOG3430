@@ -81,7 +81,7 @@ class TestCRUDMadum(unittest.TestCase):
                 "List_of_members": ["alex@gmail.com", "mark@mail.com"],
             },
         }
-        self.checkResult(crud, result)
+        self.check_result(crud, result)
 
 
     @patch("crud.CRUD.read_users_file")
@@ -102,7 +102,7 @@ class TestCRUDMadum(unittest.TestCase):
 
     
 
-# Permutation des transformateur
+# Permutation des transformateurs
 # 1) remove_group_member,add_new_group,update_groups,remove_group
 # 2) add_new_group,remove_group_member,update_groups,remove_group
 # 3) update_groups,remove_group_member,add_new_group,remove_group
@@ -894,7 +894,7 @@ class TestCRUDMadum(unittest.TestCase):
                     "Trust": 75,
                     "List_of_members": ["mark@mail.com", "alex@gmail.com"],
                 },
-                "2": {
+                "0": {
                     "name": "test_madum",
                     "Trust": 50,
                     "List_of_members": ["alex@gmail.com"],
@@ -909,6 +909,8 @@ class TestCRUDMadum(unittest.TestCase):
         crud.update_groups(1,"List_of_members", ["mark@mail.com", "alex@gmail.com"])
         self.check_result(crud,result)
 
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
     def test_transformateurs_sequence22(self, mock_read_groups_file, mock_read_users_file):
         mock_read_groups_file.return_value = self.groups_data
         mock_read_users_file.return_value = self.users_data
@@ -935,6 +937,8 @@ class TestCRUDMadum(unittest.TestCase):
         crud.update_groups(1,"List_of_members", ["mark@mail.com", "alex@gmail.com"])
         self.check_result(crud,result)
 
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
     def test_transformateurs_sequence23(self, mock_read_groups_file, mock_read_users_file):
         mock_read_groups_file.return_value = self.groups_data
         mock_read_users_file.return_value = self.users_data
@@ -946,7 +950,7 @@ class TestCRUDMadum(unittest.TestCase):
                     "Trust": 75,
                     "List_of_members": ["mark@mail.com", "alex@gmail.com"],
                 },
-                "2": {
+                "0": {
                     "name": "test_madum",
                     "Trust": 50,
                     "List_of_members": ["alex@gmail.com"],
@@ -961,7 +965,8 @@ class TestCRUDMadum(unittest.TestCase):
         crud.update_groups(1, "List_of_members", ["mark@mail.com", "alex@gmail.com"])
         self.check_result(crud,result)
 
-
+    @patch("crud.CRUD.read_users_file")
+    @patch("crud.CRUD.read_groups_file")
     def test_transformateurs_sequence24(self, mock_read_groups_file, mock_read_users_file):
         mock_read_groups_file.return_value = self.groups_data
         mock_read_users_file.return_value = self.users_data
@@ -973,7 +978,7 @@ class TestCRUDMadum(unittest.TestCase):
                     "Trust": 75,
                     "List_of_members": ["mark@mail.com", "alex@gmail.com"],
                 },
-                "2": {
+                "0": {
                     "name": "test_madum",
                     "Trust": 50,
                     "List_of_members": ["alex@gmail.com"],
